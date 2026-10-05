@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="300" viewBox="0 0 1200 300" role="img" aria-labelledby="title description">
+  <title id="title">QuickTranslator</title>
+  <desc id="description">A local-first desktop workspace for Chinese and Japanese to Vietnamese dictionary assistance and optional AI translation.</desc>
+  <rect width="1200" height="300" rx="24" fill="#17252e"/>
+  <path d="M900 0h300v300H790z" fill="#20333f"/>
+  <path d="M1088 0h112v300H978z" fill="#2a414e"/>
+  <g transform="translate(64 58) scale(.36)">
+    <rect x="24" y="24" width="464" height="464" rx="96" fill="#485966"/>
+    <path d="M108 126h116l32 22 32-22h116v236H288l-32 24-32-24H108z" fill="#f7f5ef"/>
+    <path d="M256 148v238" fill="none" stroke="#485966" stroke-width="12"/>
+    <path d="M136 184h88m-88 42h88m-88 42h88m64-84h88m-88 42h88m-88 42h88" fill="none" stroke="#b45045" stroke-width="14" stroke-linecap="round"/>
+    <path d="m282 342 24-30 22 12 40-50" fill="none" stroke="#485966" stroke-width="16" stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+  <g font-family="system-ui, -apple-system, 'Segoe UI', sans-serif">
+    <text x="286" y="118" font-size="58" font-weight="700" letter-spacing="-1.5" fill="#f7f5ef">QuickTranslator</text>
+    <text x="290" y="165" font-size="25" fill="#dbe4e8">Chinese / Japanese → Vietnamese</text>
+    <rect x="290" y="197" width="8" height="8" rx="2" fill="#c86c60"/>
+    <text x="312" y="208" font-size="17" font-weight="500" letter-spacing="1.2" fill="#aebfc8">READ · REVIEW · WRITE</text>
+  </g>
+</svg>

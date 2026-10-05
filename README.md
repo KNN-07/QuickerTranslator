@@ -1,120 +1,214 @@
-# QuickTranslator
+<p align="center">
+  <img src="docs/assets/quicktranslator-banner.svg" alt="QuickTranslator — Chinese and Japanese to Vietnamese" width="960" />
+</p>
 
-Independent Tauri 2 desktop implementation of the Chinese/Japanese → Vietnamese dictionary-assisted editor workflow. Vietnamese is the target language; Vietnamese and English are interface locales. Offline readings/glosses are lookup assistance, not fluent machine translation.
+<p align="center">
+  <strong>A local-first desktop workspace for reading, reviewing, and writing Vietnamese.</strong><br />
+  Offline dictionary assistance. A manual editor you control. Optional AI when you choose to send.
+</p>
 
-## Development
+<p align="center">
+  <a href="https://github.com/KNN-07/QuickerTranslator/actions/workflows/desktop.yml"><img src="https://github.com/KNN-07/QuickerTranslator/actions/workflows/desktop.yml/badge.svg" alt="Desktop checks and packages" /></a>
+  <a href="https://v2.tauri.app/"><img src="https://img.shields.io/badge/Tauri-2-24C8DB?logo=tauri&amp;logoColor=white" alt="Built with Tauri 2" /></a>
+  <a href="https://react.dev/"><img src="https://img.shields.io/badge/React-19-149ECA?logo=react&amp;logoColor=white" alt="React 19 interface" /></a>
+  <a href="https://www.rust-lang.org/"><img src="https://img.shields.io/badge/Rust-native_core-485966?logo=rust&amp;logoColor=white" alt="Rust native core" /></a>
+</p>
 
-Requires Node ≥22.12, npm ≥10, Rust ≥1.90, and the [Tauri platform prerequisites](https://v2.tauri.app/start/prerequisites/). Linux uses GTK3 and WebKitGTK4.1. The installed application needs no server process.
+<p align="center">
+  <a href="#features">Features</a> ·
+  <a href="#get-the-app">Get the app</a> ·
+  <a href="#your-first-document">Quick start</a> ·
+  <a href="#optional-ai-translation">AI translation</a> ·
+  <a href="#build-from-source">Build from source</a>
+</p>
 
-```sh
-npm install
-npm run data:prepare
-npm run build
-npm test -- --run
-cargo test --manifest-path src-tauri/Cargo.toml
-npm run tauri -- dev
-npm run tauri -- build
-```
+---
 
-The npm and Cargo lockfiles pin resolved dependencies. Current published Lindera 6.2.0 embeds IPADIC and implements the `load_dictionary("embedded://ipadic")` / normal-mode `Segmenter` API described in the inspected development documentation; version 7 was not published when implementation began.
+## The workspace
 
-## Offline resources
+Keep the source, readings, dictionary meanings, phrase draft, and your Vietnamese text together in a compact, resizable desktop layout. Vietnamese is the output language; the interface supports Vietnamese and English, with light and dark themes.
 
-`src-tauri/resources/dictionaries` contains the complete usable Chinese/Japanese subsets of the recorded Vietnamese Wiktionary extraction and all Unihan `kVietnamese` readings. `manifest.json` records source URLs, SHA-256 digests, snapshots, transformations, entry counts and unresolved aliases. Missing glosses are not invented. Ordinary builds use checked-in derived data and need no dictionary-host access.
+![QuickTranslator's Chinese dictionary-assisted workspace with a separate manual Vietnamese editor](docs/assets/workspace-chinese.png)
 
-`npm run data:prepare` verifies and reuses existing resources offline. Explicit refresh: `npm run data:prepare -- --refresh`. Original local input copies may be supplied with `--wiktextract PATH --unihan PATH`; locked checksums still apply without refresh. Raw download cache is outside the repository. Missing resources are a build error, not a fallback to sample dictionaries.
+*Actual native application capture using an imported sample dictionary. Red matched text links source words to generated output; the manual Vietnamese draft stays separate.*
 
-Derived Wiktionary data is CC BY-SA 4.0, separately from application code. Source-page attribution, Unicode V3, Lindera MIT and NAIST/ICOT IPADIC notices are bundled. The reference C# repository has no repository-wide license; none of its implementation, docking library or artwork is copied.
+> **Offline assistance is not fluent machine translation.** Chinese phrase lookups and Japanese readings/glosses help you review vocabulary. Missing entries stay visible rather than receiving invented translations.
 
-## Native boundaries
+## Features
 
-One native window per document. IPC text ranges are half-open UTF-16 code-unit offsets; native engines use UTF-8 maps that reject split scalars/surrogates. CPU translation work uses immutable revisioned snapshots and blocking workers. Filesystem, provider HTTP and credentials stay in Rust. Browser-only development explicitly disables native operations and provides no mock translations. Capabilities grant bundled document windows only the required local dialog, clipboard and window operations.
+| | What you can do |
+|---|---|
+| **Chinese dictionary workflow** | Review VietPhrase alternatives, Hán Việt readings, primary/secondary names, Luật Nhân rules, and ignored phrases. Choose among three matching algorithms and wrapping options. |
+| **Separate Japanese processing** | Use embedded IPADIC segmentation, hiragana readings, base forms, and part of speech. Match custom phrases on token boundaries, then look up surface → lemma → reading. |
+| **Aligned review** | Click a generated word to inspect its source, ordered meanings, and provenance. Choose alternatives or reorder first-meaning tokens with pointer dragging or the keyboard. |
+| **Your Vietnamese draft** | Write and format text in the manual editor. Insert a chosen meaning at the retained caret as one undoable edit. Source edits and dictionary reloads never replace your draft automatically. |
+| **Optional AI** | Translate a selection or document, or improve selected Vietnamese, using OpenAI, Gemini, Anthropic, or a compatible custom endpoint. Review the payload before sending. |
+| **Local dictionaries** | Import existing corpora, preview encoding and malformed records, edit entries, keep history, and preserve overrides/deletions across reloads. User corpora remain local. |
+| **Documents and exports** | Save native `.qtp` projects, migrate legacy `.qt` files, recover unsaved work, and export TXT, HTML, or DOCX with ordered columns. |
+| **A familiar desktop** | Resize and dock tabs, hide/show panes, reset layout, adjust fonts/wrapping, and use legacy traversal keys, nine snippets, and typed-only shortcuts. |
 
-## Dictionaries and migration
+<details>
+<summary><strong>See Japanese readings and unknown-word handling</strong></summary>
 
-Config → Dictionaries provides search, create/edit/delete, language/name-kind choice, optional Japanese readings/POS, per-entry history, coverage and provenance. Config → Data sources/licenses exposes bundled attribution as text. `Reload Dicts` opens previews rather than silently importing.
+![QuickTranslator in Japanese mode showing an unknown school entry, its base form and hiragana reading, and an unchanged Vietnamese draft](docs/assets/workspace-japanese.png)
 
-Select `Dictionaries.config` or individual files. Relative paths resolve against the selected config, including legacy backslashes. Missing/foreign-drive paths are listed for explicit remapping; resolved optional files can be imported separately. Previews show decoded text, encoding, accepted/duplicate/malformed counts and line diagnostics before an atomic commit. BOMs are authoritative; invalid bytes never silently become replacement characters. UTF-16 and legacy Chinese/Japanese/Vietnamese encodings support explicit overrides.
+*An actual native capture with bundled data: 学校 exposes reading がっこう while its missing Vietnamese gloss is explicitly reported. The recorded sample had glosses for 4 of 11 lexical tokens. Homograph glosses are not grammatical disambiguation; custom dictionaries can extend coverage.*
 
-`user-data.sqlite3` stores imported layers, edits, tombstones, metadata, history and shortcuts. Imports/reloads preserve edits and deletions. Immutable bundled dictionaries are never rewritten. Primary Names outrank secondary Names, then VietPhrase; auxiliary meaning dictionaries are lookup-only. User-provided corpora remain local.
+Japanese mode uses **Nhật**, **Cách đọc**, **Nghĩa từ**, and **Nghĩa từ một nghĩa**. It does not apply Chinese rules, Hán Việt readings, ignored phrases, or Chinese punctuation/case conversion. Kanji, kana, punctuation, whitespace, and emoji are preserved.
 
-Exports require a selected destination, never overwrite imports automatically, and use UTF-8 legacy text. Unrepresentable native multiline/equal-sign values produce an error without touching the destination. Japanese reading/POS metadata stays in SQLite; legacy key/value export contains meanings only. Shortcut imports lowercase keys, keep the first duplicate, and export by descending key length then lexical key.
+</details>
 
-Corrupt/unsupported user databases are not removed. Bundled lookups remain available; Config reports the unavailable store. Explicit recovery first writes no-overwrite DB/WAL/SHM/settings backups to the chosen destination, selects a new app-local database and retains original files.
+## Get the app
 
-## Aligned Chinese review
+The repository contains the complete application source. Installer artifacts are produced by successful [Desktop checks and packages](https://github.com/KNN-07/QuickerTranslator/actions/workflows/desktop.yml) runs; open a successful run and download the artifact for your platform. GitHub may require sign-in to download artifacts.
 
-Source edits translate after 300 ms idle, outside IME composition. Clipboard translation and Re-Translate are explicit actions. Config selects `longest`, `leftToRight` or `longestConditional`, name priority and bracket wrapping. Matching uses a per-revision prefix index with a 20-Unicode-scalar phrase limit and separately compiled Luật Nhân rules. Chinese punctuation/spacing/capitalization changes generated outputs only; ignored spans keep their source mappings.
+| Platform | Package | Availability / verification |
+|---|---|---|
+| Linux x86_64 | `.deb`, `.AppImage` | Built and exercised locally without outbound networking. Check Actions for hosted artifacts. |
+| Windows x86_64 | NSIS installer | Configured in native CI; check the Windows job for build results. |
+| macOS Apple Silicon / Intel | `.app`, `.dmg` | Separate native CI targets; check each architecture's job for results. |
 
-Click a generated token to select its source and inspect ordered meanings, readings and provenance in Nghĩa. Choosing an alternative or dragging a first-meaning token edits a separate dirty draft. Alt+Shift+Left/Right also moves tokens within the same paragraph; Alt+Left/Right remains reserved for document navigation. Retranslation asks Discard/Cancel before removing draft edits. Stale drafts remain copyable without falsely aligning them to changed source.
+Packages without owner-supplied signing credentials are labeled **unsigned**; macOS ad-hoc signing is not Developer ID signing or notarization. Follow your operating system's approval process. On Linux, make the AppImage executable and use a local CJK font such as Noto Sans CJK. OS-backed key storage requires an available credential service, including Secret Service on Linux.
 
-Nghĩa inserts a chosen meaning/reading at the retained Vietnamese caret or selection as one undoable edit; explicit override actions save local dictionary changes. Dictionary/model-looking markup is inserted as literal text, not HTML. Source/language/dictionary changes never automatically replace Việt. Source undo survives hiding/reopening panes and resetting layout.
+There is no runtime dictionary download, mandatory account, or separate server to run. To build your own installer, use [Build from source](#build-from-source).
 
-Internal tabs/groups and tokens use pointer dragging to coexist with Tauri's native file-path drop handler. Dockview handles docking itself; no custom docking engine is used. Config adjusts per-pane font sizes, wrapping and synchronized source/output scrolling. Manual Vietnamese text is never given false word-level source alignment.
+## Your first document
 
-## Japanese assistance
+1. **Choose Chinese or Japanese.** Source language is explicit; new documents default to Chinese.
+2. **Open a file or paste source text.** Use **Translate From Clipboard**, or edit the source directly. Offline lookup runs after 300 ms idle and pauses during IME composition.
+3. **Review a word.** Click generated text to select its source and open **Nghĩa**. Inspect alternatives/readings and copy a choice into your saved Vietnamese caret or selection.
+4. **Write your Vietnamese draft.** Format it independently, adjust the first-meaning draft, and add dictionary overrides where needed. Retranslation asks before discarding draft edits.
+5. **Save or export.** Save work as `.qtp`; export the target or selected, ordered columns as TXT, HTML, or DOCX.
 
-Choose Japanese explicitly; shared Han characters never cause automatic language detection. Embedded IPADIC normal-mode segmentation supplies source byte spans, base forms, readings and POS. Display readings convert katakana to hiragana. User Japanese phrases/names match longest exact spans on token boundaries; otherwise lookup proceeds surface → lemma → kana reading. Japanese never applies Chinese rules, ignored phrases, Hán Việt readings or punctuation/case conversion.
+### Bring your dictionaries
 
-The panes become Nhật, Cách đọc, Nghĩa từ and Nghĩa từ một nghĩa. Unknown vocabulary remains original text with an explicit unknown indicator in Nghĩa; punctuation, whitespace and emoji pass through without unknown warnings. Switching language cancels stale work and retains Việt.
+Open **Config → Dictionaries** to search, add/edit/delete entries, inspect history, import corpora, or view attribution. **Reload Dicts** opens import previews instead of silently replacing data.
 
-Recorded bundled-data smoke for `私は学校で日本語を勉強しています。🙂`: 4 of 11 lexical tokens had Vietnamese glosses (`私`, `日本語`, `を`, `い`). `学校` had IPADIC reading `がっこう` but no bundled gloss; `し` exposed lemma `する` and reading `し`, without a bundled gloss. User imports added exact school/Japanese-language glosses and lemma-based `làm`. Homograph glosses are not grammatical disambiguation; use them for review or request explicit AI translation.
+Import `Dictionaries.config` or individual files. Relative legacy paths, including backslashes, are resolved from the selected config; missing/foreign-drive paths can be remapped explicitly. Previews show encoding, accepted/duplicate/malformed counts, and diagnostics before an atomic commit. User edits and tombstones survive reloads; bundled resources are never rewritten.
 
-## Documents, exports and recovery
+<details>
+<summary><strong>Import, encoding, and storage details</strong></summary>
 
-File supports Open, Save, Save As, Export and Close. Native titles show filename and dirty state. Open/New/Close/sibling navigation share asynchronous Save/Discard/Cancel decisions; cancelling Save As does not authorize a transition. New opens another native window and does not erase the still-open old document. Native file drops use the same import and dirty guard.
+- Supported legacy kinds include Names/NamesPhu, VietPhrase, ChinesePhienAmWords, ChinesePhienAmEnglishWords, CEDict, Babylon, Lạc Việt, Thiều Chửu, ignored phrases, Luật Nhân, Pronouns, and ThuatToanNhan. Auxiliary dictionaries are lookup-only. Primary Names outrank secondary Names, then VietPhrase.
+- Legacy key/value imports require exactly one `=` and retain the first duplicate; `/` and `|` meaning order is preserved. CEDict indexes traditional and simplified spellings. Japanese custom entries accept `headword=meaning1/meaning2`; optional readings/POS are edited in-app.
+- BOMs are authoritative. UTF-8, UTF-16LE/BE, GB18030/GBK, Big5, Shift-JIS, EUC-JP, and Windows-1258 support preview/override. Invalid bytes are not silently replaced.
+- `user-data.sqlite3` holds imported layers, edits, deletions, metadata, history, and shortcuts. Corrupt/unsupported databases are preserved; explicit recovery first backs up DB/WAL/SHM/settings before selecting a new local store.
+- Dictionary exports require a destination and use UTF-8 legacy text. Unrepresentable multiline/equal-sign values fail without touching that destination; reading/POS metadata stays in the native store.
+- Shortcut imports lowercase keys, keep the first duplicate, and export by descending key length then lexical key. Expansion occurs only on a typed target delimiter, never during IME, paste, or drop.
 
-New saves use `.qtp`: UTF-8 JSON with `format:"quicktranslator-project"`, `version:1`, explicit source language, target `vi`, source text, validated Tiptap target JSON, exact-snapshot draft edits, view state and optional original RTF. Keys and global dictionary databases are not included. Existing invalid/future projects are protected from overwrites; atomic-save failure keeps prior bytes and editor work.
+</details>
 
-Import `.qt`, plain text and local HTML through encoding previews/overrides. `.qt` marker parsing rejects ambiguous structure; invalid scroll indices reset to zero with warnings. RTF group/control parsing preserves supported text formatting, escaped characters, code pages, Unicode/surrogates, paragraphs and field display text. Objects/pictures/field instructions and unsupported layout are omitted with warnings; the original decoded RTF remains available for unchanged original-RTF export. Local HTML imports visible body text without executing or loading scripts/styles/resources. Binary `.doc` (and unsupported `.docx` input) requires conversion to TXT/HTML.
+### Work with existing files
 
-Export current target as UTF-8 TXT, escaped standalone HTML or DOCX. HTML/DOCX support ordered source/readings/full-phrase/first-meaning/target columns and blank-line spacing. RTF export is explicitly the original retained payload, not an export of later target edits.
+| Format | Support |
+|---|---|
+| `.qtp` | Native UTF-8 project: source language/text, formatted target, exact-snapshot draft edits, and view state. No API keys or copies of global dictionaries. |
+| Legacy `.qt` | Import Chinese text and supported RTF formatting with warnings for omitted layout/objects. Keep the original RTF for unchanged original-RTF export. |
+| TXT / local HTML | Import through encoding previews. HTML body text is extracted without executing scripts or loading remote resources. |
+| TXT / HTML / DOCX | Export Vietnamese text; HTML/DOCX support ordered source/readings/phrase/first-meaning/target columns and blank-line spacing. |
+| Binary `.doc` / `.docx` input | Not supported. Convert to TXT or HTML before importing; DOCX is an export format. |
 
-App-data `settings.json` stores versioned nonsecret layout/interface/editor preferences, traversal bindings, nine snippets and provider metadata. Invalid/future settings remain untouched while safe defaults load; explicit replacement retains `settings.invalid-<UUID>.json`. Unsaved work uses UUID-per-document recovery files; startup offers individual restore/discard choices. Discarding one record leaves other records intact.
-
-Keyboard: Ctrl/Cmd+O/S/Shift+S/E/F, platform undo/redo, Ctrl/Cmd+Shift+N new window, Alt+Left/Right sibling navigation. Configurable Ctrl+K/J words, M/I lines, N/U paragraphs retain the legacy traversal convention; Ctrl+0 inserts a reading, Ctrl+1…6 a meaning, F1…F9 a configured snippet. Typed target shortcuts expand case-insensitively only on a typed delimiter as an isolated undo transaction, never during IME, paste or drop.
+Open, New, Close, and sibling navigation share **Save / Discard / Cancel** handling. Cancelling Save As does not authorize a transition. Atomic saves keep the previous file on failure; invalid/future projects and settings are preserved. Startup recovery offers each document independently. Native titles show filename and dirty state.
 
 ## Optional AI translation
 
-`AI Translate` reveals the AI tab; it does not send data. Config → AI profiles supplies official URL presets or custom API roots. Enter a required model ID, choose protocol/authentication and save the profile. Presets intentionally contain no selected model. The default output limit is 4096 tokens. Chat profiles explicitly choose `max_tokens`, `max_completion_tokens` or `omit`; compatible servers receive no requested usage extension.
+Open **AI Translate**, then **Configure profiles**. Choose a protocol, enter a required model ID, set authentication and save the profile. Official URL presets and custom API roots are available; presets do not silently choose a model.
 
-| Protocol | Appended route | Native authentication |
-|---|---|---|
-| OpenAI Responses | `/responses` | Bearer API key |
-| OpenAI-compatible Chat | `/chat/completions` | Bearer API key, or explicit no authentication |
-| Gemini | `/models/{model}:streamGenerateContent?alt=sse` or `:generateContent` | `x-goog-api-key` |
-| Anthropic Messages | `/messages` | `x-api-key` and `anthropic-version: 2023-06-01` |
+| Provider / protocol | What is supported |
+|---|---|
+| **OpenAI Responses** | Native Responses API; streaming and non-streaming, with `store:false`. |
+| **OpenAI-compatible Chat** | Chat Completions, including local servers with explicit no authentication. Choose `max_tokens`, `max_completion_tokens`, or `omit`; no requested usage extensions. |
+| **Google Gemini** | Native generation API, visible text only, safety/finish handling, and optional `models/` model prefix. |
+| **Anthropic Messages** | Native Messages API, visible text block streaming, usage, refusal, and truncation handling. |
 
-Custom roots retain version/team/proxy prefixes and native provider formats. Gemini strips an optional `models/` prefix and encodes the remaining model as one path segment. Streaming can be disabled per profile. HTTP is accepted automatically only on loopback; other HTTP roots require explicit insecure-transport consent. TLS verification stays enabled; redirects, automatic paid retries and provider/model/protocol fallbacks are disabled.
+**Review → Send → Preview → Apply.** Only the selected source, or the explicitly chosen document, is sent. Improvement sends only selected Vietnamese plus explicitly selected source context. Matched glossaries use the active offline policy and include only entries inside each chosen fragment—not entire private dictionaries or surrounding text.
 
-Translate selected source or the document; improve only selected Vietnamese with explicitly selected source context, which may be empty. Review the actual native payload, endpoint/model, UTF-16 source span, matched glossary and chunk count, then use the separate Send action. Glossaries use the active offline matching policy and include only matches inside each chosen fragment, never complete private dictionaries or surrounding document text. Document requests are sequential chunks of at most 4000 Unicode scalars; paragraph/sentence boundaries and inter-chunk delimiters are retained.
+Whole documents are sent sequentially in chunks of at most 4000 Unicode scalars, preserving inter-chunk delimiters. Results stay in the AI preview until you apply them. Cancelled, failed, or truncated output remains copyable but cannot be applied as a completed result. Target edits disable stale application; source/language/options/dictionary changes or closing the window invalidate native work. Replace All asks for confirmation, and either application is one undoable edit.
 
-Output streams into preview only. Cancel, refusals, malformed/interrupted responses and output-limit truncation never enable Apply; validated partial prose and completed chunks remain copyable, including non-stream token-limit failures. Only full success with unchanged source/target revisions can apply at the retained target selection/caret. Replace All requires an asynchronous confirmation; either application is one undoable edit. Editing source, switching language, changing matching options/dictionaries or closing the window invalidates native work. Target edits preserve preview but disable stale application/retry. AI never starts on typing, clipboard operations, file open or dictionary import.
+### Privacy and credentials
 
-Connection Test shows the configured endpoint/model and sends only the fixed `你好。 → vi` request through the actual adapter. It can incur provider charges; it never uploads the open document. Live official-provider access requires the owner's credentials and available model; deterministic loopback tests are not proof of paid-provider connectivity.
+- Provider HTTP, filesystem access, and credentials stay in Rust. Keys are passed once, cleared from the input, and never returned to JavaScript or written to browser storage, settings, projects, or plaintext fallback files.
+- OS credentials are bound to profile ID and canonical API root. Changing root/authentication invalidates the active binding; stale cross-window credential writes are rejected.
+- If the vault is locked/unavailable, explicitly choose **session-only** and re-enter the key. It is held in zeroizing native memory and lost on exit. Restoring vault access may be necessary to delete existing OS items safely.
+- Custom API roots preserve version/team/proxy prefixes. TLS verification stays enabled and redirects are disabled. HTTP outside loopback needs an explicit insecure-transport opt-in.
+- AI never starts on typing, clipboard polling, file open, or dictionary import. There are no automatic paid retries, model/provider discovery, or protocol fallbacks.
+- **Connection Test may incur charges.** It sends only the fixed `你好。 → vi` request to the shown endpoint/model, not the open document.
 
-## Credentials
+Official live-provider connectivity depends on your credentials and available model. Loopback smoke proves the implemented protocols, not a paid-provider call.
 
-Keys are entered transiently, passed once to Rust and cleared from the input. They are neither returned to JavaScript nor stored in browser storage, settings, projects or plaintext fallback files. The native OS store uses service `io.github.quickertranslator.desktop`, bound to profile ID and canonical API root. Changing root/authentication invalidates the active key binding. Credential writes also carry the reviewed endpoint and reject a concurrent endpoint change before storing anything.
+## Keyboard essentials
 
-If the OS vault is unavailable or locked, explicitly choose **session-only** and re-enter the key. Session keys are zeroizing native-memory values, lost on exit. Deleting a profile removes tracked credential items for all its older endpoints; a locked/unavailable store must be restored before existing OS items can be deleted safely. Linux needs an available Secret Service. The real Linux vault round-trip, endpoint invalidation and deletion were exercised with an isolated GNOME Keyring service; this does not unlock or configure the user's desktop vault.
+| Action | Shortcut |
+|---|---|
+| Open / Save / Save As / Export | Ctrl/Cmd+O / S / Shift+S / E |
+| Source find and replace | Ctrl/Cmd+F |
+| New native document window | Ctrl/Cmd+Shift+N |
+| Previous / next sibling document | Alt+Left / Right |
+| Move a first-meaning token | Alt+Shift+Left / Right |
+| Insert reading / meanings | Ctrl+0 / Ctrl+1…6 |
+| Insert configured snippets | F1…F9 |
+| Legacy word / line / paragraph traversal | Configurable Ctrl+K/J / M/I / N/U |
 
-## Packages and CI
+Platform undo/redo conventions are retained. Source Replace All is one undoable edit. **Ctrl+N is reserved for legacy traversal**, not New. Configure pane fonts, wrapping, synchronized scrolling, shortcuts, and snippets in **Config**.
 
-Linux package build:
+## Build from source
+
+Requires **Node ≥22.12**, **npm ≥10**, **Rust ≥1.90**, and the [Tauri platform prerequisites](https://v2.tauri.app/start/prerequisites/). Linux uses GTK3 and WebKitGTK 4.1.
 
 ```sh
+git clone https://github.com/KNN-07/QuickerTranslator.git
+cd QuickerTranslator
 npm ci
 npm run data:prepare -- --verify
+npm run tauri -- dev
+```
+
+Build an installer for the current platform:
+
+```sh
+npm run tauri -- build -- --locked
+```
+
+Linux deb/AppImage only:
+
+```sh
 npm run tauri -- build --bundles deb,appimage -- --locked
 ```
 
-Installers are under `src-tauri/target/release/bundle/`: Debian `.deb` and executable `.AppImage`. AppImage needs executable permission and a compatible Linux desktop; use a local CJK font such as Noto Sans CJK for readable source glyphs. These locally built packages are unsigned and reflect this host's system-library baseline.
+Outputs are under `src-tauri/target/release/bundle/`. npm/Cargo lockfiles pin dependencies. Published Lindera **6.2.0** embeds IPADIC; version 7 was unavailable when implementation began. Browser-only `npm run dev` is a UI preview: native operations are explicitly unavailable and no mock translations are supplied.
 
-`.github/workflows/desktop.yml` checks locked dependencies/resources, TypeScript/Vitest and Rust on native Windows x86_64, Ubuntu 22.04 x86_64, macOS arm64 and macOS Intel runners. It uploads NSIS, deb/AppImage and app/dmg packages with architecture/signing labels, without publishing a release or installing an updater. The workflow passed actionlint; consult GitHub Actions for native platform build results.
+### Checks and architecture
 
-Signing is optional and secrets are supplied only on default-branch push/manual builds, never PRs. Windows uses `WINDOWS_CERTIFICATE` (base64 PFX including private key) plus `WINDOWS_CERTIFICATE_PASSWORD`. macOS uses `APPLE_CERTIFICATE` (base64 Developer ID P12) plus `APPLE_CERTIFICATE_PASSWORD`; notarization additionally requires `APPLE_ID`, app-specific `APPLE_PASSWORD` and `APPLE_TEAM_ID`. Incomplete secret sets fail instead of silently downgrading. macOS without owner credentials is explicitly labeled unsigned/ad-hoc; Gatekeeper approval remains necessary. Signing/notarization were not locally verified.
+```sh
+npm run build
+npm test -- --run
+cargo test --manifest-path src-tauri/Cargo.toml
+npm run tauri -- build --debug --no-bundle
+```
 
-Both built Linux packages were launched on Xvfb with a separate network namespace and no outbound routes. Chinese lookups and Japanese IPADIC readings/glosses worked; AppImage restart restored layout and individually recovered the Japanese document. Native/browser UI checks covered 1280×800 and 900×600. Four real native protocol adapters passed streaming/non-stream loopback smoke, cancellation, selected-text privacy, stale apply guards, one-undo application and per-window job isolation. Official live-provider connectivity remains unverified without owner credentials.
+The native core uses immutable revisioned dictionary/source snapshots, scalar-safe UTF-8 ↔ UTF-16 maps, transactional SQLite, blocking CPU workers, and cancellation-aware HTTP/SSE. Each window owns document revisions and jobs. Capabilities/CSP restrict IPC to bundled document windows; source/model text is rendered as text, never executable HTML.
 
+Local verification covered **217 Rust tests**, **23 frontend tests**, a real isolated Linux credential-store round-trip, native four-protocol loopback streaming/non-streaming, cancellation/stale apply/undo/window isolation, and 1280×800 / 900×600 surfaces. Linux packages worked without outbound routes; DOCX opened in LibreOffice. See [CI](https://github.com/KNN-07/QuickerTranslator/actions/workflows/desktop.yml) for current native Windows/Linux/macOS results and [CHANGELOG](CHANGELOG.md) for changes. Signing/notarization and official live-provider calls were not locally verified.
 
+<details>
+<summary><strong>CI signing configuration</strong></summary>
+
+CI uploads architecture/signing-labeled artifacts without publishing a release or installing an updater. Signing secrets are supplied only on default-branch push/manual runs, never PRs. Incomplete sets fail instead of silently downgrading.
+
+- Windows: `WINDOWS_CERTIFICATE` (base64 PFX including private key), `WINDOWS_CERTIFICATE_PASSWORD`.
+- macOS signing: `APPLE_CERTIFICATE` (base64 Developer ID P12), `APPLE_CERTIFICATE_PASSWORD`.
+- macOS notarization also requires `APPLE_ID`, app-specific `APPLE_PASSWORD`, and `APPLE_TEAM_ID`.
+
+macOS without owner credentials is labeled unsigned/ad-hoc. Gatekeeper approval remains necessary.
+
+</details>
+
+## Offline data and attribution
+
+Bundled, recorded resources contain **3,243 Chinese entries**, **7,812 Japanese entries**, **8,306 Hán Việt entries**, and embedded IPADIC. Coverage varies; missing words and unresolved aliases are not filled with generated or English glosses labeled Vietnamese. User imports can extend the base data.
+
+[The manifest](src-tauri/resources/dictionaries/manifest.json) records snapshots, source URLs, SHA-256 digests, counts, and transformations. Ordinary builds verify checked-in derived resources without data-host access. `npm run data:prepare` verifies/reuses them; an explicit `npm run data:prepare -- --refresh` refreshes them. Local original inputs can be supplied with `--wiktextract PATH --unihan PATH`; raw caches stay outside the repository.
+
+Vietnamese Wiktionary derivatives use **CC BY-SA 4.0**, separately from application code. [Attribution](src-tauri/resources/dictionaries/ATTRIBUTION.txt) and [license notices](src-tauri/resources/dictionaries/licenses/) cover Wiktionary, Unicode V3, Lindera MIT, and NAIST/ICOT IPADIC. They are also available in **Config → Data sources/licenses**.
+
+QuickTranslator is an independent implementation of the workflow of [the original desktop application](https://github.com/dynamotn/QuickTranslator). Its C# implementation, vendored docking library, artwork, and unsafe binary settings are not copied. No upstream repository-wide license is assumed.
