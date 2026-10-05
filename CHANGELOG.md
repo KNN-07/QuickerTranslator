@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## 0.1.0 - 2026-10-05
 
 - Establish independent QuickTranslator Tauri 2/React native workspace, compact four-group docking layout, Vietnamese/English interface and native document windows.
 - Define revisioned immutable translation contracts, scalar-safe UTF-16 editor ranges and atomic file replacement.
@@ -23,3 +23,4 @@
 - Build unsigned Linux deb/AppImage packages; verify packaged Chinese/Japanese assistance and restored layout/recovery without outbound networking.
 - Preserve dictionary/license and test-fixture bytes across Git checkouts; prevent Windows LF-to-CRLF conversion from breaking resource checksums or encoded newline-boundary fixtures.
 - Verify legacy config resolution by importing and looking up the selected dictionary, rather than requiring one Windows path-separator spelling; report all native test-suite failures before failing CI.
+- Publish the first GitHub release with same-commit Windows/Linux/macOS installers and application archives, explicit unsigned/ad-hoc labels, and SHA-256 checksums.

@@ -60,13 +60,15 @@ Japanese mode uses **Nhật**, **Cách đọc**, **Nghĩa từ**, and **Nghĩa t
 
 ## Get the app
 
-The repository contains the complete application source. Installer artifacts are produced by successful [Desktop checks and packages](https://github.com/KNN-07/QuickerTranslator/actions/workflows/desktop.yml) runs; open a successful run and download the artifact for your platform. GitHub may require sign-in to download artifacts.
+Download installers from [GitHub Releases](https://github.com/KNN-07/QuickerTranslator/releases/latest). Choose your operating system and architecture, then compare the downloaded file with the release's `SHA256SUMS.txt`. The complete source remains available here; additional installer artifacts are produced by successful [desktop workflow](https://github.com/KNN-07/QuickerTranslator/actions/workflows/desktop.yml) runs.
+
+**First release:** [QuickTranslator v0.1.0](https://github.com/KNN-07/QuickerTranslator/releases/tag/v0.1.0), with seven installer/application assets and SHA-256 checksums.
 
 | Platform | Package | Availability / verification |
 |---|---|---|
-| Linux x86_64 | `.deb`, `.AppImage` | Built and exercised locally without outbound networking. Check Actions for hosted artifacts. |
-| Windows x86_64 | NSIS installer | Configured in native CI; check the Windows job for build results. |
-| macOS Apple Silicon / Intel | `.app`, `.dmg` | Separate native CI targets; check each architecture's job for results. |
+| Linux x86_64 | [Debian package](https://github.com/KNN-07/QuickerTranslator/releases/download/v0.1.0/QuickTranslator_0.1.0_linux_amd64_unsigned.deb) · [AppImage](https://github.com/KNN-07/QuickerTranslator/releases/download/v0.1.0/QuickTranslator_0.1.0_linux_x64_unsigned.AppImage) | Native CI passed; local package/UI smoke worked without outbound networking. |
+| Windows x86_64 | [NSIS installer](https://github.com/KNN-07/QuickerTranslator/releases/download/v0.1.0/QuickTranslator_0.1.0_windows_x64_unsigned-setup.exe) | Native tests and installer build passed. |
+| macOS Apple Silicon / Intel | [Apple Silicon DMG](https://github.com/KNN-07/QuickerTranslator/releases/download/v0.1.0/QuickTranslator_0.1.0_macos_aarch64_unsigned-adhoc.dmg) · [Intel DMG](https://github.com/KNN-07/QuickerTranslator/releases/download/v0.1.0/QuickTranslator_0.1.0_macos_x64_unsigned-adhoc.dmg) | Native tests and app/DMG builds passed for both architectures; not notarized. |
 
 Packages without owner-supplied signing credentials are labeled **unsigned**; macOS ad-hoc signing is not Developer ID signing or notarization. Follow your operating system's approval process. On Linux, make the AppImage executable and use a local CJK font such as Noto Sans CJK. OS-backed key storage requires an available credential service, including Secret Service on Linux.
 
@@ -188,7 +190,7 @@ npm run tauri -- build --debug --no-bundle
 
 The native core uses immutable revisioned dictionary/source snapshots, scalar-safe UTF-8 ↔ UTF-16 maps, transactional SQLite, blocking CPU workers, and cancellation-aware HTTP/SSE. Each window owns document revisions and jobs. Capabilities/CSP restrict IPC to bundled document windows; source/model text is rendered as text, never executable HTML.
 
-Local verification covered **217 Rust tests**, **23 frontend tests**, a real isolated Linux credential-store round-trip, native four-protocol loopback streaming/non-streaming, cancellation/stale apply/undo/window isolation, and 1280×800 / 900×600 surfaces. Linux packages worked without outbound routes; DOCX opened in LibreOffice. See [CI](https://github.com/KNN-07/QuickerTranslator/actions/workflows/desktop.yml) for current native Windows/Linux/macOS results and [CHANGELOG](CHANGELOG.md) for changes. Signing/notarization and official live-provider calls were not locally verified.
+Local verification covered **217 Rust tests**, **23 frontend tests**, a real isolated Linux credential-store round-trip, native four-protocol loopback streaming/non-streaming, cancellation/stale apply/undo/window isolation, and 1280×800 / 900×600 surfaces. Linux packages worked without outbound routes; DOCX opened in LibreOffice. [The v0.1.0 native CI run](https://github.com/KNN-07/QuickerTranslator/actions/runs/37260282758) passed tests and packaging on Windows, Linux, and both macOS architectures. Native Windows/macOS desktop interaction, owner signing/notarization, and official live-provider calls were not separately verified here. See [CHANGELOG](CHANGELOG.md) for changes.
 
 <details>
 <summary><strong>CI signing configuration</strong></summary>
