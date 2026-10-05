@@ -1,0 +1,2 @@
+# Manifest-locked resources must remain byte-identical on every platform.
+src-tauri/resources/dictionaries/** -text
