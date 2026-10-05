@@ -22,3 +22,4 @@
 - Add native Windows/Ubuntu/macOS architecture-specific CI, least-privilege unsigned-by-default artifact uploads and conditional owner-supplied Windows signing/macOS signing-notarization.
 - Build unsigned Linux deb/AppImage packages; verify packaged Chinese/Japanese assistance and restored layout/recovery without outbound networking.
 - Preserve dictionary/license and test-fixture bytes across Git checkouts; prevent Windows LF-to-CRLF conversion from breaking resource checksums or encoded newline-boundary fixtures.
+- Verify legacy config resolution by importing and looking up the selected dictionary, rather than requiring one Windows path-separator spelling; report all native test-suite failures before failing CI.

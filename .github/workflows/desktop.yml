@@ -153,7 +153,7 @@ jobs:
           key: cargo-v1-${{ runner.os }}-${{ matrix.target }}-rust-${{ steps.rust.outputs.version }}-${{ hashFiles('src-tauri/Cargo.lock', 'src-tauri/Cargo.toml') }}
 
       - name: Test Rust on the actual native target
-        run: cargo test --locked --manifest-path src-tauri/Cargo.toml --target "$NATIVE_TARGET"
+        run: cargo test --locked --no-fail-fast --manifest-path src-tauri/Cargo.toml --target "$NATIVE_TARGET"
 
       - name: Prepare optional Windows code signing
         id: windows-signing

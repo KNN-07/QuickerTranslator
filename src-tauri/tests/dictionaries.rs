@@ -137,7 +137,11 @@ fn config_resolves_relative_backslashes_reports_foreign_drives_and_remaps_missin
     let mut request = ConfigRequest { path: config.to_string_lossy().into_owned(), encoding: None, remappings: HashMap::new() };
     let preview = preview_config(&request).unwrap();
     assert_eq!(preview.rule_algorithm, 3);
-    assert_eq!(preview.dictionaries[0].resolved_path.as_deref(), Some(names.to_string_lossy().as_ref()));
+    let (store, state) = service(directory.path());
+    let resolved = Path::new(preview.dictionaries[0].resolved_path.as_deref().unwrap());
+    let import = store.preview_import(import_request(resolved, Kind::PrimaryNames, None)).unwrap();
+    commit(&store, &state, &import);
+    assert_eq!(state.dictionaries().unwrap().lookup(Language::Zh, Kind::PrimaryNames, "张三").unwrap().meanings, ["Trương Tam"]);
     assert_eq!(preview.dictionaries[1].problem.as_deref(), Some("missingPath"));
     assert!(preview.dictionaries[2].resolved_path.is_none());
     assert_eq!(preview.issues[0].code, "unknownConfigKey");
