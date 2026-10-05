@@ -21,4 +21,4 @@
 - Preserve non-stream truncated prose, accept default empty SSE event names and release cancelled/failed recovery leases without deleting retained work.
 - Add native Windows/Ubuntu/macOS architecture-specific CI, least-privilege unsigned-by-default artifact uploads and conditional owner-supplied Windows signing/macOS signing-notarization.
 - Build unsigned Linux deb/AppImage packages; verify packaged Chinese/Japanese assistance and restored layout/recovery without outbound networking.
-- Preserve manifest-locked dictionary/license bytes across Git checkouts; prevent Windows LF-to-CRLF conversion from breaking resource checksum verification.
+- Preserve dictionary/license and test-fixture bytes across Git checkouts; prevent Windows LF-to-CRLF conversion from breaking resource checksums or encoded newline-boundary fixtures.

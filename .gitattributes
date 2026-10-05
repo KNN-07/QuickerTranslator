@@ -1,2 +1,5 @@
 # Manifest-locked resources must remain byte-identical on every platform.
 src-tauri/resources/dictionaries/** -text
+
+# Fixtures exercise exact encoding and newline boundaries, not host checkout defaults.
+src-tauri/tests/fixtures/** -text
