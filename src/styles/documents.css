@@ -1,0 +1,34 @@
+.document-dialog { width: min(620px, calc(100vw - 32px)); max-height: calc(100vh - 40px); overflow: auto; padding: 16px; border: 1px solid var(--border); border-radius: 3px; background: var(--surface); color: var(--text); font-size: 13px; box-shadow: 0 6px 28px #0004; }
+.document-dialog::backdrop { background: #0005; }
+.document-dialog h2 { margin: 0 0 12px; font-size: 16px; }
+.document-dialog p { line-height: 1.5; }
+.document-path { display: block; overflow-wrap: anywhere; color: var(--muted); font-size: 12px; }
+.document-preview { max-height: 220px; overflow: auto; padding: 9px; border: 1px solid var(--border); background: var(--surface-muted); white-space: pre-wrap; font-family: inherit; font-size: 14px; }
+.document-form-row { display: flex; align-items: center; gap: 8px; margin: 10px 0; }
+.document-form-row > span { flex: 1; }
+.document-dialog input, .document-dialog select, .shortcut-settings input, .shortcut-settings textarea { padding: 4px; border: 1px solid var(--border); border-radius: 2px; background: var(--surface); color: var(--text); font: inherit; }
+.document-form-row input[type='number'] { width: 70px; }
+.document-actions { display: flex; justify-content: flex-end; flex-wrap: wrap; gap: 8px; margin-top: 14px; }
+.document-dialog button { border: 1px solid var(--border); padding: 4px 10px; border-radius: 2px; background: var(--chrome); color: var(--text); font: inherit; }
+.document-dialog button:hover:not(:disabled) { background: var(--chrome-hover); }
+.document-dialog fieldset { border: 1px solid var(--border); padding: 10px; }
+.document-column-option { display: inline-flex; gap: 4px; align-items: center; margin: 5px 12px 5px 0; }
+.document-column-order { padding-left: 22px; }
+.document-column-order li { margin: 5px 0; }
+.document-column-order li > span { display: inline-block; width: 210px; }
+.document-column-order button { margin-left: 5px; padding: 2px 8px; }
+.recovery-records { padding: 0; list-style: none; }
+.recovery-records li { padding: 9px 0; border-bottom: 1px solid var(--border); }
+.recovery-records time { color: var(--muted); font-size: 11px; }
+.unsaved-dialog { width: min(460px, calc(100vw - 32px)); }
+.document-warnings ul { max-height: 160px; overflow: auto; margin-bottom: 4px; }
+.document-warnings details { flex: 1; }
+.shortcut-settings { margin-top: 16px; border-top: 1px solid var(--border); }
+.shortcut-settings h3 { font-size: 14px; }
+.shortcut-settings h4 { margin-bottom: 6px; font-size: 13px; }
+.traversal-settings input { width: 32px; text-align: center; }
+.settings-dialog .snippet-setting { align-items: flex-start; gap: 9px; }
+.snippet-setting textarea { flex: 1; min-width: 0; resize: vertical; }
+.target-pane--no-wrap .tiptap { white-space: pre; overflow-wrap: normal; word-break: normal; min-width: max-content; }
+.meanings-no-wrap, .meanings-no-wrap .auxiliary-meaning, .meanings-no-wrap .auxiliary-entry pre { white-space: pre; overflow-wrap: normal; word-break: normal; }
+.settings-dialog { max-height: calc(100vh - 40px); overflow: auto; }

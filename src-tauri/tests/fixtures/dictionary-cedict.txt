@@ -1,0 +1,4 @@
+# Independent synthetic CEDict fixture
+學校 学校 [xue2 xiao4] /trường học/học đường/
+你好 你好 [ni3 hao3] /xin chào/
+not a cedict record

@@ -1,0 +1,62 @@
+.workspace-editor-pane { width: 100%; height: 100%; min-width: 0; min-height: 0; display: flex; flex-direction: column; color: var(--text); background: var(--surface); overflow: hidden; }
+.code-pane { flex: 1; min-width: 0; min-height: 0; overflow: hidden; }
+.code-pane .cm-editor { height: 100%; color: var(--text); background: var(--surface); font-family: inherit; }
+.code-pane .cm-scroller { overflow: auto; font-family: inherit; line-height: 1.65; }
+.code-pane .cm-content { padding: 6px 8px; caret-color: var(--text); }
+.code-pane .cm-focused { outline: none; }
+.code-pane .cm-editor.cm-focused { box-shadow: inset 0 0 0 1px var(--focus); }
+.code-pane .cm-selectionBackground, .code-pane .cm-focused .cm-selectionBackground { background: var(--selection); }
+.code-pane .cm-cursor { border-left-color: var(--text); }
+.code-pane .cm-panels { background: var(--chrome); color: var(--text); border-color: var(--border); }
+.code-pane .cm-textfield { color: var(--text); background: var(--surface); border: 1px solid var(--border); }
+.code-pane .cm-button { color: var(--text); background: var(--chrome); border: 1px solid var(--border); }
+.aligned-match { color: var(--match); text-decoration: underline; text-decoration-color: color-mix(in srgb, var(--match) 40%, transparent); text-underline-offset: 3px; background: color-mix(in srgb, var(--match) 5%, var(--surface)); }
+.aligned-selection { background: var(--selection); color: var(--text); box-shadow: inset 0 -2px var(--focus); }
+[data-segment-id][data-reorderable="true"] { cursor: grab; }
+.code-pane .token-dragging, .code-pane .token-dragging [data-segment-id] { cursor: grabbing; }
+.editor-pane-note { flex: 0 0 auto; padding: 2px 7px; border-top: 1px solid var(--border); color: var(--muted); font-size: 11px; background: var(--surface-muted); }
+.target-pane { height: 100%; display: flex; flex-direction: column; min-height: 0; }
+.editor-format-toolbar { display: flex; flex: 0 0 auto; align-items: center; flex-wrap: wrap; gap: 2px; padding: 2px 4px; border-bottom: 1px solid var(--border); background: var(--chrome); font-size: 12px; }
+.editor-format-toolbar button, .editor-format-toolbar select { min-height: 23px; padding: 1px 6px; border: 1px solid var(--border); border-radius: 2px; background: var(--surface); }
+.editor-format-toolbar button[aria-pressed="true"] { background: var(--selection); border-color: var(--focus); }
+.editor-format-toolbar input[type="color"] { width: 25px; height: 23px; padding: 1px; border: 1px solid var(--border); background: var(--surface); }
+.target-editor-host { flex: 1; min-height: 0; overflow: auto; }
+.vietnamese-editor { min-height: 100%; padding: 7px 9px; outline: none; line-height: 1.65; overflow-wrap: anywhere; }
+.vietnamese-editor:focus { box-shadow: inset 0 0 0 1px var(--focus); }
+.vietnamese-editor p { margin: 0 0 0.4em; }
+.vietnamese-editor h1, .vietnamese-editor h2, .vietnamese-editor h3 { line-height: 1.25; }
+.vietnamese-editor blockquote { border-left: 3px solid var(--border); margin-left: 0; padding-left: 12px; }
+.meanings-content { overflow: auto; padding: 7px 9px; line-height: 1.45; }
+.meanings-content h3 { font-size: 1.2em; margin: 0 0 6px; color: var(--match); }
+.meanings-content h4 { font-size: 1em; margin: 3px 0; }
+.meanings-content p { margin: 4px 0; }
+.meanings-content button { border: 1px solid var(--border); border-radius: 2px; padding: 2px 5px; color: var(--text); background: var(--surface-muted); font-size: 12px; }
+.meanings-content .meaning-choice, .meanings-content .meaning-reading { font-size: inherit; text-align: left; background: transparent; border-color: transparent; }
+.meanings-content .meaning-choice:hover, .meanings-content .meaning-reading:hover { background: var(--selection); border-color: var(--focus); }
+.meaning-choices { margin: 5px 0 8px; padding-left: 24px; }
+.meaning-choices li { padding: 2px 0; }
+.meaning-choices li > button { margin-right: 3px; }
+.unknown-marker { color: var(--warning-text); background: var(--warning-background); padding: 3px 5px; }
+.dictionary-provenance { margin: 4px 0 8px; padding-left: 16px; font-size: 11px; color: var(--muted); }
+.provenance-kind { margin-left: 6px; }
+.provenance-url { display: block; overflow-wrap: anywhere; }
+.auxiliary-entry { margin-top: 9px; padding-top: 7px; border-top: 1px solid var(--border); }
+.auxiliary-meaning { white-space: pre-wrap; overflow-wrap: anywhere; }
+.auxiliary-entry pre { white-space: pre-wrap; overflow-wrap: anywhere; font: inherit; }
+.editor-context-menu { position: fixed; z-index: 300; min-width: 240px; max-width: 320px; max-height: min(380px, 80vh); overflow: auto; padding: 4px; border: 1px solid var(--border); border-radius: 2px; box-shadow: 0 4px 12px #0003; background: var(--surface); font-size: 13px; }
+.editor-context-menu > button, .context-meaning-row > button { display: block; width: 100%; text-align: left; padding: 5px 7px; border: 0; background: transparent; color: var(--text); }
+.editor-context-menu button:hover { background: var(--selection); }
+.context-meaning-row { display: flex; }
+.context-meaning-row > button:first-child { flex: 1; min-width: 0; overflow-wrap: anywhere; }
+.context-meaning-row > button:last-child { flex: 0 0 auto; width: auto; }
+.settings-dialog { max-height: 90vh; overflow: auto; }
+.workspace-settings { margin-top: 10px; border-top: 1px solid var(--border); }
+.workspace-settings h3 { font-size: 14px; }
+.workspace-settings .workspace-check { display: flex; align-items: center; justify-content: flex-start; gap: 7px; }
+.workspace-settings .workspace-check input { flex: 0 0 auto; width: auto; }
+.pane-font-settings { display: grid; grid-template-columns: 1fr 1fr; gap: 2px 10px; }
+.pane-font-settings label { display: flex; justify-content: space-between; gap: 8px; }
+.pane-font-settings input { width: 64px; }
+.override-dialog label { display: flex; flex-direction: column; gap: 4px; align-items: stretch; }
+.override-dialog textarea, .override-dialog input, .override-dialog select { background: var(--surface); color: var(--text); border: 1px solid var(--border); padding: 4px 6px; }
+.workspace-error { color: var(--error-text); }

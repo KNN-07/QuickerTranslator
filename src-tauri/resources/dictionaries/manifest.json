@@ -1,0 +1,566 @@
+{
+  "format": "quicktranslator-dictionaries",
+  "version": 1,
+  "scriptVersion": 3,
+  "generatedAt": "2026-10-04T04:09:59.515Z",
+  "entrySchema": {
+    "headword": "string",
+    "meanings": "string[] (ordered)",
+    "reading": "string|null",
+    "pos": "string|null",
+    "aliases": "string[]",
+    "sourceUrls": "string[]"
+  },
+  "ordering": "JavaScript UTF-16 code-unit lexical order; meanings in original input order; aliases/sourceUrls sorted and unique",
+  "sources": {
+    "wiktextract": {
+      "sha256": "106d8bd9d1161eef6c9097be4eb8c8c41c3cfd4c8747cf5f78aa541e0759895e",
+      "bytes": 33773177,
+      "url": "https://kaikki.org/viwiktionary/raw-wiktextract-data.jsonl.gz",
+      "retrievedAt": "2026-10-04T04:09:52.839Z",
+      "suppliedLocally": true,
+      "lastModified": null
+    },
+    "unihan": {
+      "sha256": "4c93ea9c1f636451729a840978f1667a53886af37ba854fdcce109721c63d43e",
+      "bytes": 8340649,
+      "url": "https://www.unicode.org/Public/UCD/latest/ucd/Unihan.zip",
+      "retrievedAt": "2026-10-04T04:09:52.875Z",
+      "suppliedLocally": true,
+      "lastModified": null
+    },
+    "wiktextractMetadata": {
+      "sha256": "28bdeba719a47acc7a28336643f39554a9b9a4ca13d23ad8b12d33ebdf057434",
+      "bytes": 15295,
+      "url": "https://kaikki.org/viwiktionary/rawdata.html",
+      "retrievedAt": "2026-10-04T04:00:44.747Z",
+      "suppliedLocally": false,
+      "lastModified": "Sat, 03 Oct 2026 06:08:08 GMT"
+    },
+    "license-ipadic": {
+      "sha256": "fca02d9adb601d101eccdf3131119abfff2d9c825ef5c759d7a89ebbaa972099",
+      "bytes": 3795,
+      "url": "https://raw.githubusercontent.com/lindera/mecab-ipadic/master/COPYING",
+      "retrievedAt": "2026-10-04T04:09:53.136Z",
+      "suppliedLocally": false,
+      "lastModified": null
+    },
+    "license-lindera": {
+      "sha256": "d37249886de3136db31717f15f6ade215a36fbed1c782381e38b2bf6047e8ec4",
+      "bytes": 1080,
+      "url": "https://raw.githubusercontent.com/lindera/lindera/main/LICENSE",
+      "retrievedAt": "2026-10-04T04:09:53.199Z",
+      "suppliedLocally": false,
+      "lastModified": null
+    },
+    "license-unicode": {
+      "sha256": "e7a93b009565cfce55919a381437ac4db883e9da2126fa28b91d12732bc53d96",
+      "bytes": 1995,
+      "url": "https://www.unicode.org/license.txt",
+      "retrievedAt": "2026-10-04T04:09:53.661Z",
+      "suppliedLocally": false,
+      "lastModified": "Mon, 05 Jan 2026 15:17:23 GMT"
+    },
+    "license-wiktionary": {
+      "sha256": "28a9529c7d0bb4dc51f4bf5c116a3d16ef247a052f7591466768ddf563fd1cf5",
+      "bytes": 20138,
+      "url": "https://creativecommons.org/licenses/by-sa/4.0/legalcode.txt",
+      "retrievedAt": "2026-10-04T04:09:53.794Z",
+      "suppliedLocally": false,
+      "lastModified": "Mon, 11 Sep 2023 21:49:40 GMT"
+    }
+  },
+  "snapshots": {
+    "wiktionaryDump": "2026-09-01",
+    "wiktextractExtraction": "2026-10-03",
+    "unicodeRelease": "18.0.0"
+  },
+  "resources": [
+    {
+      "file": "zh-vi.jsonl",
+      "sha256": "c11a558e4675a28d452484d570ed96fe0a71576b43a08a60297d1f218ea8cb99",
+      "bytes": 930524,
+      "entryCount": 3243,
+      "meaningCount": 8782,
+      "aliasCount": 3794,
+      "source": "wiktextract",
+      "license": "CC-BY-SA-4.0"
+    },
+    {
+      "file": "ja-vi.jsonl",
+      "sha256": "c7c1424aadd5a1cbd510ecae1557edb3dfa1be07f43f365b4b2ea2ad128668a8",
+      "bytes": 1879146,
+      "entryCount": 7812,
+      "meaningCount": 9259,
+      "aliasCount": 9085,
+      "source": "wiktextract",
+      "license": "CC-BY-SA-4.0"
+    },
+    {
+      "file": "han-viet.jsonl",
+      "sha256": "7f31eeed719ade6809c454fa7838e8eaae19c0ce198dbfdd3eba14b0786f5058",
+      "bytes": 1695893,
+      "entryCount": 8306,
+      "meaningCount": 8655,
+      "aliasCount": 0,
+      "source": "unihan",
+      "license": "Unicode-3.0"
+    }
+  ],
+  "notices": [
+    {
+      "file": "licenses/IPADIC.txt",
+      "sha256": "6973c63a310aa46c4350135b470042c05b12fdf52ccf6d708fd9f549d6f1adcd",
+      "bytes": 3904,
+      "license": "NAIST-ICOT",
+      "sourceUrl": "https://raw.githubusercontent.com/lindera/mecab-ipadic/master/COPYING",
+      "encoding": "UTF-8"
+    },
+    {
+      "file": "licenses/IPADIC-original.COPYING",
+      "sha256": "fca02d9adb601d101eccdf3131119abfff2d9c825ef5c759d7a89ebbaa972099",
+      "bytes": 3795,
+      "license": "NAIST-ICOT",
+      "sourceUrl": "https://raw.githubusercontent.com/lindera/mecab-ipadic/master/COPYING",
+      "encoding": "original bytes (upstream includes non-UTF-8 bytes)"
+    },
+    {
+      "file": "licenses/Lindera-MIT.txt",
+      "sha256": "d37249886de3136db31717f15f6ade215a36fbed1c782381e38b2bf6047e8ec4",
+      "bytes": 1080,
+      "license": "MIT",
+      "sourceUrl": "https://raw.githubusercontent.com/lindera/lindera/main/LICENSE",
+      "encoding": "UTF-8"
+    },
+    {
+      "file": "licenses/Unicode-V3.txt",
+      "sha256": "e7a93b009565cfce55919a381437ac4db883e9da2126fa28b91d12732bc53d96",
+      "bytes": 1995,
+      "license": "Unicode-3.0",
+      "sourceUrl": "https://www.unicode.org/license.txt",
+      "encoding": "UTF-8"
+    },
+    {
+      "file": "licenses/CC-BY-SA-4.0.txt",
+      "sha256": "28a9529c7d0bb4dc51f4bf5c116a3d16ef247a052f7591466768ddf563fd1cf5",
+      "bytes": 20138,
+      "license": "CC-BY-SA-4.0",
+      "sourceUrl": "https://creativecommons.org/licenses/by-sa/4.0/legalcode.txt",
+      "encoding": "UTF-8"
+    },
+    {
+      "file": "ATTRIBUTION.txt",
+      "sha256": "b8ed35b0edb01c7d03fae2c26c0d1dade95ec08307dad001854005eadec7df54",
+      "bytes": 2980,
+      "license": "resource-specific",
+      "sourceUrl": "https://kaikki.org/viwiktionary/rawdata.html"
+    }
+  ],
+  "transformations": [
+    "Stream and strictly decode gzip JSONL; filter lang_code ja, zh and cmn from the Vietnamese Wiktionary edition.",
+    "Merge all nonempty senses[].glosses by headword in original record/sense order; retain original text and stable unique meanings.",
+    "Merge observed pos labels in input order into a semicolon-separated string; leave unavailable readings null.",
+    "Index extractor-authored forms[].form and senses[].alt_of/form_of; resolve alias chains/cycles to gloss-bearing headwords; never invent glosses.",
+    "Retain Vietnamese Wiktionary source-page URLs for headwords and relation aliases, including contributors via page history.",
+    "Stream every Unihan*.txt ZIP member; extract all kVietnamese alternatives; normalize NFC/lowercase only derived Vietnamese readings.",
+    "Keep source characters unchanged; sort headwords/aliases/provenance deterministically; emit one six-field UTF-8 JSON object per line.",
+    "Bundle byte-exact IPADIC COPYING and a UTF-8 display copy with explicitly escaped non-UTF-8 bytes; never discard license text."
+  ],
+  "preparationReport": {
+    "wiktextract": {
+      "totalRecords": 421406,
+      "selectedRecords": {
+        "zh": 5295,
+        "ja": 11820
+      },
+      "missingGlossRecords": {
+        "zh": 1893,
+        "ja": 3478
+      },
+      "relations": {
+        "zh": 6267,
+        "ja": 2262
+      },
+      "formRelations": {
+        "zh": 2965,
+        "ja": 8991
+      },
+      "resolvedAliases": {
+        "zh": 3367,
+        "ja": 6084
+      },
+      "unresolvedAliases": {
+        "zh": 650,
+        "ja": 477
+      },
+      "unresolvedSamples": {
+        "zh": [
+          {
+            "alias": "beng",
+            "targets": [
+              "bēng",
+              "béng",
+              "běng",
+              "bèng"
+            ]
+          },
+          {
+            "alias": "bie",
+            "targets": [
+              "biē",
+              "bié",
+              "biě",
+              "biè"
+            ]
+          },
+          {
+            "alias": "cùn",
+            "targets": [
+              "吋",
+              "寸",
+              "籿"
+            ]
+          },
+          {
+            "alias": "dia",
+            "targets": [
+              "diǎ"
+            ]
+          },
+          {
+            "alias": "dèn",
+            "targets": [
+              "扥",
+              "扽",
+              "㩐"
+            ]
+          },
+          {
+            "alias": "gà",
+            "targets": [
+              "尬",
+              "骱"
+            ]
+          },
+          {
+            "alias": "lá",
+            "targets": [
+              "拉",
+              "揦",
+              "旯",
+              "砬",
+              "磖",
+              "邋"
+            ]
+          },
+          {
+            "alias": "lìng",
+            "targets": [
+              "另",
+              "令",
+              "呤",
+              "炩",
+              "掕",
+              "靈"
+            ]
+          },
+          {
+            "alias": "mên",
+            "targets": [
+              "mê̄n"
+            ]
+          },
+          {
+            "alias": "rui",
+            "targets": [
+              "ruí",
+              "ruǐ",
+              "ruì"
+            ]
+          },
+          {
+            "alias": "rùn",
+            "targets": [
+              "橍",
+              "潤",
+              "膶"
+            ]
+          },
+          {
+            "alias": "tī",
+            "targets": [
+              "佄",
+              "剔",
+              "梯",
+              "睅",
+              "踢",
+              "銴",
+              "锑",
+              "骵",
+              "髓",
+              "鵗",
+              "鷈",
+              "鷉",
+              "体"
+            ]
+          },
+          {
+            "alias": "xin",
+            "targets": [
+              "xīn",
+              "xín",
+              "xǐn",
+              "xìn"
+            ]
+          },
+          {
+            "alias": "àng",
+            "targets": [
+              "枊",
+              "盎",
+              "醠",
+              "㼜"
+            ]
+          },
+          {
+            "alias": "ō",
+            "targets": [
+              "喔",
+              "噢",
+              "呵"
+            ]
+          },
+          {
+            "alias": "嗔",
+            "targets": [
+              "瞋"
+            ]
+          },
+          {
+            "alias": "娬",
+            "targets": [
+              "嫵"
+            ]
+          },
+          {
+            "alias": "岩石",
+            "targets": [
+              "巖石"
+            ]
+          },
+          {
+            "alias": "莪",
+            "targets": [
+              "菌"
+            ]
+          },
+          {
+            "alias": "菘",
+            "targets": [
+              "白菜"
+            ]
+          },
+          {
+            "alias": "褒",
+            "targets": [
+              "裒"
+            ]
+          },
+          {
+            "alias": "豫",
+            "targets": [
+              "預"
+            ]
+          },
+          {
+            "alias": "鵙",
+            "targets": [
+              "鶪"
+            ]
+          },
+          {
+            "alias": "鷊",
+            "targets": [
+              "鷁",
+              "虉"
+            ]
+          },
+          {
+            "alias": "𪚥",
+            "targets": [
+              "讋"
+            ]
+          }
+        ],
+        "ja": [
+          {
+            "alias": "aba",
+            "targets": [
+              "あば"
+            ]
+          },
+          {
+            "alias": "anime",
+            "targets": [
+              "アニメ"
+            ]
+          },
+          {
+            "alias": "anta",
+            "targets": [
+              "あんた"
+            ]
+          },
+          {
+            "alias": "bari",
+            "targets": [
+              "バリ"
+            ]
+          },
+          {
+            "alias": "bien",
+            "targets": [
+              "びえん"
+            ]
+          },
+          {
+            "alias": "bon",
+            "targets": [
+              "ぼん"
+            ]
+          },
+          {
+            "alias": "bī",
+            "targets": [
+              "ビー"
+            ]
+          },
+          {
+            "alias": "esa",
+            "targets": [
+              "えさ"
+            ]
+          },
+          {
+            "alias": "furigana",
+            "targets": [
+              "ふりがな"
+            ]
+          },
+          {
+            "alias": "gai",
+            "targets": [
+              "がい"
+            ]
+          },
+          {
+            "alias": "hatta",
+            "targets": [
+              "はった"
+            ]
+          },
+          {
+            "alias": "iki",
+            "targets": [
+              "いき"
+            ]
+          },
+          {
+            "alias": "kin",
+            "targets": [
+              "きん"
+            ]
+          },
+          {
+            "alias": "kishi",
+            "targets": [
+              "きし"
+            ]
+          },
+          {
+            "alias": "mage",
+            "targets": [
+              "まげ"
+            ]
+          },
+          {
+            "alias": "mare",
+            "targets": [
+              "まれ"
+            ]
+          },
+          {
+            "alias": "mina",
+            "targets": [
+              "みな"
+            ]
+          },
+          {
+            "alias": "nihon",
+            "targets": [
+              "にほん"
+            ]
+          },
+          {
+            "alias": "nisan",
+            "targets": [
+              "にさん"
+            ]
+          },
+          {
+            "alias": "rennen",
+            "targets": [
+              "れんねん"
+            ]
+          },
+          {
+            "alias": "rui",
+            "targets": [
+              "るい"
+            ]
+          },
+          {
+            "alias": "shida",
+            "targets": [
+              "しだ"
+            ]
+          },
+          {
+            "alias": "テキスト",
+            "targets": [
+              "テキストブック"
+            ]
+          },
+          {
+            "alias": "师",
+            "targets": [
+              "師"
+            ]
+          },
+          {
+            "alias": "训",
+            "targets": [
+              "訓"
+            ]
+          }
+        ]
+      },
+      "glossPolicy": "Only nonempty original Vietnamese-edition senses[].glosses; no generated, English, or fallback definitions.",
+      "aliasPolicy": "Only forms[].form and senses[].alt_of/form_of; combined form/relation chains resolve to existing gloss-bearing headwords. Unresolved aliases are not emitted."
+    },
+    "unihan": {
+      "release": "18.0.0",
+      "scannedMembers": [
+        "Unihan_DictionaryIndices.txt",
+        "Unihan_DictionaryLikeData.txt",
+        "Unihan_IRGSources.txt",
+        "Unihan_NumericValues.txt",
+        "Unihan_OtherMappings.txt",
+        "Unihan_RadicalStrokeCounts.txt",
+        "Unihan_Readings.txt",
+        "Unihan_Variants.txt"
+      ],
+      "readingRecords": 8306
+    }
+  }
+}

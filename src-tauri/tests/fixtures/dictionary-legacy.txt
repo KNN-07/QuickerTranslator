@@ -1,0 +1,8 @@
+你好=xin chào/chào bạn|lời chào
+你好=không được giữ
+AbC=giữ hoa thường
+abc=khác biệt
+broken
+=xấu
+坏=a=b
+空=

@@ -1,0 +1,5 @@
+对{0}说=nói với {0}
+(foo){0}bar=nhóm {0}
+坏{0}{0}=sai
+(?!前){0}=không hỗ trợ
+常量=không có chỗ trống

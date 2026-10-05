@@ -1,0 +1,285 @@
+name: Desktop checks and packages
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: desktop-${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  desktop:
+    name: ${{ matrix.platform }} ${{ matrix.arch }}
+    runs-on: ${{ matrix.runner }}
+    timeout-minutes: 120
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - platform: windows
+            arch: x86_64
+            runner: windows-latest
+            runner_arch: X64
+            node_arch: x64
+            target: x86_64-pc-windows-msvc
+            bundles: nsis
+          - platform: linux
+            arch: x86_64
+            runner: ubuntu-22.04
+            runner_arch: X64
+            node_arch: x64
+            target: x86_64-unknown-linux-gnu
+            bundles: deb,appimage
+          # Both macOS test suites execute natively, without Rosetta or cross-running.
+          # https://docs.github.com/en/actions/reference/runners/github-hosted-runners
+          - platform: macos
+            arch: arm64
+            runner: macos-15
+            runner_arch: ARM64
+            node_arch: arm64
+            target: aarch64-apple-darwin
+            bundles: app,dmg
+          - platform: macos
+            arch: x86_64
+            runner: macos-15-intel
+            runner_arch: X64
+            node_arch: x64
+            target: x86_64-apple-darwin
+            bundles: app,dmg
+
+    defaults:
+      run:
+        shell: bash
+    env:
+      CI: 'true'
+      RUSTUP_TOOLCHAIN: stable
+      CARGO_TERM_COLOR: always
+      NATIVE_TARGET: ${{ matrix.target }}
+      NATIVE_BUNDLES: ${{ matrix.bundles }}
+      # Let AppImage build tools run on hosted runners without requiring a FUSE mount.
+      APPIMAGE_EXTRACT_AND_RUN: '1'
+
+    steps:
+      - name: Check out sources
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          persist-credentials: false
+
+      - name: Configure dependency cache directories
+        run: |
+          printf 'CARGO_HOME=%s/cargo-home\n' "$RUNNER_TEMP" >> "$GITHUB_ENV"
+          printf 'npm_config_cache=%s/npm-cache\n' "$RUNNER_TEMP" >> "$GITHUB_ENV"
+
+      - name: Require the native runner architecture
+        env:
+          EXPECTED_ARCH: ${{ matrix.runner_arch }}
+        run: test "$RUNNER_ARCH" = "$EXPECTED_ARCH"
+
+      - name: Install Linux native dependencies
+        if: runner.os == 'Linux'
+        # Tauri 2 requires WebKitGTK 4.1, not the obsolete 4.0 development packages.
+        # https://v2.tauri.app/start/prerequisites/
+        run: |
+          sudo apt-get update
+          sudo apt-get install --no-install-recommends -y \
+            build-essential curl wget file libwebkit2gtk-4.1-dev \
+            libxdo-dev libssl-dev libayatana-appindicator3-dev librsvg2-dev \
+            patchelf libfuse2
+
+      - name: Install Node 22 LTS
+        id: node
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7
+        with:
+          node-version: '^22.12.0'
+          check-latest: true
+          architecture: ${{ matrix.node_arch }}
+          package-manager-cache: false
+
+      - name: Cache npm package content only
+        uses: actions/cache@caa296126883cff596d87d8935842f9db880ef25 # v5
+        with:
+          # Exclude npm logs, configuration, node_modules, and all signing material.
+          path: ${{ env.npm_config_cache }}/_cacache
+          key: npm-v1-${{ runner.os }}-${{ matrix.target }}-node-${{ steps.node.outputs.node-version }}-npm-10.9.4-${{ hashFiles('package-lock.json') }}
+
+      - name: Install npm 10 and locked frontend dependencies
+        run: |
+          npm install --global npm@10.9.4
+          node --version
+          npm --version
+          npm ci
+
+      - name: Verify committed dictionaries without network acquisition
+        run: |
+          # Explicit verification makes missing resources fail, never download/regenerate.
+          npm run data:prepare -- --verify
+          node scripts/prepare-dictionaries.mjs --verify
+
+      - name: Build and test the frontend
+        run: |
+          npm run build
+          npm test -- --run
+
+      - name: Install stable Rust and the native target
+        id: rust
+        run: |
+          set -euo pipefail
+          rustup toolchain install stable --profile minimal --no-self-update
+          rustup target add --toolchain stable "$NATIVE_TARGET"
+          details="$(rustc --version --verbose)"
+          printf '%s\n' "$details"
+          [[ "$details" == *"host: $NATIVE_TARGET"* ]]
+          read -r _ version _ <<< "$(rustc --version)"
+          IFS=. read -r major minor _ <<< "$version"
+          if (( major < 1 || (major == 1 && minor < 90) )); then
+            echo 'Rust 1.90 or newer is required.' >&2
+            exit 1
+          fi
+          printf 'version=%s\n' "$version" >> "$GITHUB_OUTPUT"
+
+      - name: Cache locked Cargo dependency downloads
+        uses: actions/cache@caa296126883cff596d87d8935842f9db880ef25 # v5
+        with:
+          # Do not cache target/, credential files, private keys, or macOS keychains.
+          path: |
+            ${{ env.CARGO_HOME }}/registry/index
+            ${{ env.CARGO_HOME }}/registry/cache
+            ${{ env.CARGO_HOME }}/git/db
+          key: cargo-v1-${{ runner.os }}-${{ matrix.target }}-rust-${{ steps.rust.outputs.version }}-${{ hashFiles('src-tauri/Cargo.lock', 'src-tauri/Cargo.toml') }}
+
+      - name: Test Rust on the actual native target
+        run: cargo test --locked --manifest-path src-tauri/Cargo.toml --target "$NATIVE_TARGET"
+
+      - name: Prepare optional Windows code signing
+        id: windows-signing
+        if: runner.os == 'Windows'
+        shell: pwsh
+        env:
+          WINDOWS_CERTIFICATE: ${{ github.event_name != 'pull_request' && github.ref == format('refs/heads/{0}', github.event.repository.default_branch) && secrets.WINDOWS_CERTIFICATE || '' }}
+          WINDOWS_CERTIFICATE_PASSWORD: ${{ github.event_name != 'pull_request' && github.ref == format('refs/heads/{0}', github.event.repository.default_branch) && secrets.WINDOWS_CERTIFICATE_PASSWORD || '' }}
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $config = @{ build = @{ beforeBuildCommand = $null } }
+          $signing = 'unsigned'
+          $hasCertificate = -not [string]::IsNullOrEmpty($env:WINDOWS_CERTIFICATE)
+          $hasPassword = -not [string]::IsNullOrEmpty($env:WINDOWS_CERTIFICATE_PASSWORD)
+          if ($hasCertificate -ne $hasPassword) {
+            throw 'Windows signing requires both WINDOWS_CERTIFICATE and WINDOWS_CERTIFICATE_PASSWORD.'
+          }
+          if ($hasCertificate) {
+            $pfx = Join-Path $env:RUNNER_TEMP 'quicktranslator-signing.pfx'
+            try {
+              [IO.File]::WriteAllBytes($pfx, [Convert]::FromBase64String($env:WINDOWS_CERTIFICATE))
+              $password = ConvertTo-SecureString $env:WINDOWS_CERTIFICATE_PASSWORD -AsPlainText -Force
+              $certificates = @(Import-PfxCertificate -FilePath $pfx -CertStoreLocation Cert:\CurrentUser\My -Password $password |
+                Where-Object { $_.HasPrivateKey })
+              if ($certificates.Count -ne 1) { throw 'The PFX must contain exactly one signing certificate with its private key.' }
+              $config.bundle = @{ windows = @{
+                certificateThumbprint = $certificates[0].Thumbprint
+                digestAlgorithm = 'sha256'
+                timestampUrl = 'https://timestamp.digicert.com'
+              } }
+              $signing = 'signed'
+            } finally {
+              if (Test-Path $pfx) { Remove-Item -LiteralPath $pfx -Force }
+            }
+          }
+          $path = Join-Path $env:RUNNER_TEMP 'quicktranslator-build-config.json'
+          $config | ConvertTo-Json -Depth 5 | Set-Content -LiteralPath $path -Encoding utf8
+          "config=$path" | Out-File -FilePath $env:GITHUB_OUTPUT -Append -Encoding utf8
+          "signing=$signing" | Out-File -FilePath $env:GITHUB_OUTPUT -Append -Encoding utf8
+
+      - name: Build native platform installers
+        id: native
+        # Only default-branch push/manual runs may receive the owner's Apple secrets.
+        # PRs (including same-repository PRs) and other branches are always unsigned.
+        # Tauri imports the P12, infers its real identity, and handles its temporary keychain.
+        # https://v2.tauri.app/reference/environment-variables/
+        # https://v2.tauri.app/distribute/sign/macos/
+        env:
+          APPLE_CERTIFICATE: ${{ runner.os == 'macOS' && github.event_name != 'pull_request' && github.ref == format('refs/heads/{0}', github.event.repository.default_branch) && secrets.APPLE_CERTIFICATE || '' }}
+          APPLE_CERTIFICATE_PASSWORD: ${{ runner.os == 'macOS' && github.event_name != 'pull_request' && github.ref == format('refs/heads/{0}', github.event.repository.default_branch) && secrets.APPLE_CERTIFICATE_PASSWORD || '' }}
+          APPLE_ID: ${{ runner.os == 'macOS' && github.event_name != 'pull_request' && github.ref == format('refs/heads/{0}', github.event.repository.default_branch) && secrets.APPLE_ID || '' }}
+          APPLE_PASSWORD: ${{ runner.os == 'macOS' && github.event_name != 'pull_request' && github.ref == format('refs/heads/{0}', github.event.repository.default_branch) && secrets.APPLE_PASSWORD || '' }}
+          APPLE_TEAM_ID: ${{ runner.os == 'macOS' && github.event_name != 'pull_request' && github.ref == format('refs/heads/{0}', github.event.repository.default_branch) && secrets.APPLE_TEAM_ID || '' }}
+          WINDOWS_SIGNING_CONFIG: ${{ steps.windows-signing.outputs.config }}
+          WINDOWS_SIGNING_STATUS: ${{ steps.windows-signing.outputs.signing }}
+        run: |
+          set -euo pipefail
+          signing=unsigned
+          native_config='{"build":{"beforeBuildCommand":null}}'
+          if [[ "$RUNNER_OS" == Windows ]]; then
+            native_config="$WINDOWS_SIGNING_CONFIG"
+            signing="$WINDOWS_SIGNING_STATUS"
+          fi
+          if [[ "$RUNNER_OS" == macOS ]]; then
+            if [[ -n "$APPLE_CERTIFICATE" && -n "$APPLE_CERTIFICATE_PASSWORD" ]]; then
+              signing=signed-unnotarized
+              if [[ -n "$APPLE_ID" && -n "$APPLE_PASSWORD" && -n "$APPLE_TEAM_ID" ]]; then
+                signing=signed-notarized
+              elif [[ -n "$APPLE_ID" || -n "$APPLE_PASSWORD" || -n "$APPLE_TEAM_ID" ]]; then
+                echo 'Notarization requires APPLE_ID, APPLE_PASSWORD (app-specific), and APPLE_TEAM_ID together.' >&2
+                exit 1
+              else
+                unset APPLE_ID APPLE_PASSWORD APPLE_TEAM_ID
+              fi
+            elif [[ -n "$APPLE_CERTIFICATE" || -n "$APPLE_CERTIFICATE_PASSWORD" || -n "$APPLE_ID" || -n "$APPLE_PASSWORD" || -n "$APPLE_TEAM_ID" ]]; then
+              echo 'macOS signing requires both APPLE_CERTIFICATE and APPLE_CERTIFICATE_PASSWORD.' >&2
+              exit 1
+            else
+              unset APPLE_CERTIFICATE APPLE_CERTIFICATE_PASSWORD APPLE_ID APPLE_PASSWORD APPLE_TEAM_ID
+              # Apple Silicon needs ad-hoc signing; this is NOT Developer ID signing
+              # or notarization, so these outputs remain explicitly labeled unsigned.
+              export APPLE_SIGNING_IDENTITY='-'
+              signing=unsigned-adhoc
+            fi
+          else
+            # Windows uses its optional imported owner certificate; Linux is unsigned.
+            unset APPLE_CERTIFICATE APPLE_CERTIFICATE_PASSWORD APPLE_ID APPLE_PASSWORD APPLE_TEAM_ID
+          fi
+          # The checked frontend is already built. Override only its redundant hook.
+          # The final -- passes --locked to Cargo, rather than to the Tauri CLI.
+          npm run tauri -- build --ci --target "$NATIVE_TARGET" --bundles "$NATIVE_BUNDLES" \
+            --config "$native_config" -- --locked
+          printf 'signing=%s\n' "$signing" >> "$GITHUB_OUTPUT"
+
+      - name: Collect distributable packages
+        env:
+          SIGNING_STATUS: ${{ steps.native.outputs.signing }}
+        run: |
+          set -euo pipefail
+          bundle_dir="src-tauri/target/$NATIVE_TARGET/release/bundle"
+          mkdir -p desktop-artifacts
+          case "$RUNNER_OS" in
+            Windows)
+              cp "$bundle_dir"/nsis/*.exe desktop-artifacts/
+              ;;
+            Linux)
+              cp "$bundle_dir"/deb/*.deb "$bundle_dir"/appimage/*.AppImage desktop-artifacts/
+              ;;
+            macOS)
+              cp "$bundle_dir"/dmg/*.dmg desktop-artifacts/
+              # Preserve .app executable permissions, symlinks, and signature structure.
+              tar -czf "desktop-artifacts/QuickTranslator-$NATIVE_TARGET-$SIGNING_STATUS.app.tar.gz" \
+                -C "$bundle_dir/macos" QuickTranslator.app
+              ;;
+          esac
+          printf 'Built %s packages (%s). No release was published.\n' "$NATIVE_TARGET" "$SIGNING_STATUS" >> "$GITHUB_STEP_SUMMARY"
+          if [[ "$RUNNER_OS" == Linux ]]; then
+            echo 'After downloading/unzipping, run chmod +x on the AppImage before launching it.' >> "$GITHUB_STEP_SUMMARY"
+          fi
+
+      - name: Upload platform and architecture packages
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
+        with:
+          name: QuickTranslator-${{ matrix.platform }}-${{ matrix.arch }}-${{ steps.native.outputs.signing }}
+          path: desktop-artifacts/
+          if-no-files-found: error
+          retention-days: 14
+          compression-level: 0
+          include-hidden-files: false

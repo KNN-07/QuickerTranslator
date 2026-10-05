@@ -1,0 +1,41 @@
+import type { UiLocale } from '../../lib/types';
+const vi = {
+  discardDraft: 'Bản nháp một nghĩa có thay đổi. Dịch lại sẽ bỏ các thay đổi này. Tiếp tục?',
+  discard: 'Bỏ bản nháp',
+  staleDraft: 'Bản nháp đã sửa; nguồn hoặc từ điển đã thay đổi. Chọn Re-Translate để dịch lại sau khi xác nhận.',
+  japanesePending: 'Bộ xử lý tiếng Nhật chưa khả dụng. Nội dung Việt được giữ nguyên; không dùng bộ dịch tiếng Trung.',
+  translating: 'Đang tra từ điển…', dirty: 'Đã sửa', saved: 'Chưa sửa', sourceCount: 'ký tự nguồn',
+  chooseMeaning: 'Chọn nghĩa cho bản nháp', insert: 'Chèn vào Việt', insertReading: 'Chèn cách đọc vào Việt', insertSelection: 'Chèn phần đã chọn vào Việt',
+  copy: 'Sao chép', editOverride: 'Sửa / lưu ghi đè từ điển…', saveOverride: 'Lưu ghi đè', overrideTitle: 'Ghi đè từ điển cục bộ',
+  headword: 'Từ mục', meanings: 'Các nghĩa (ngăn bằng / hoặc |)', reading: 'Cách đọc', kind: 'Loại từ điển',
+  primaryNames: 'Tên chính', secondaryNames: 'Tên phụ', vietPhrase: 'VietPhrase', hanViet: 'Hán Việt', japanese: 'Từ điển Nhật',
+  moveLeft: 'Chuyển từ sang trái (Alt+Shift+←)', moveRight: 'Chuyển từ sang phải (Alt+Shift+→)', reorderHint: 'Kéo từ để đổi thứ tự trong cùng đoạn; Alt+Shift+← / Alt+Shift+→ cũng được.',
+  cancel: 'Hủy', close: 'Đóng', unknown: 'Chưa có nghĩa tiếng Việt', lemma: 'Từ gốc', partOfSpeech: 'Từ loại', provenance: 'Nguồn từ điển',
+  lookup: 'Đang tra nghĩa bổ sung…', noMeaning: 'Không tìm thấy nghĩa bổ sung.', dictionary: 'Từ điển', bundled: 'Dữ liệu kèm ứng dụng', imported: 'Nhập cục bộ', edited: 'Đã sửa cục bộ',
+  formatting: 'Định dạng tiếng Việt', bold: 'Đậm', italic: 'Nghiêng', underline: 'Gạch chân', textColor: 'Màu chữ', fontSize: 'Cỡ chữ', alignment: 'Căn đoạn', alignLeft: 'Trái', alignCenter: 'Giữa', alignRight: 'Phải', alignJustify: 'Đều', undo: 'Hoàn tác', redo: 'Làm lại',
+  algorithm: 'Thuật toán tra cụm Trung', longest: 'Cụm dài nhất', leftToRight: 'Từ trái sang phải', longestConditional: 'Cụm dài nhất có điều kiện',
+  prioritizeNames: 'Ưu tiên tên', fullWrap: 'Ngoặc VietPhrase', singleWrap: 'Ngoặc một nghĩa', none: 'Không', all: 'Tất cả', ambiguous: 'Nhiều nghĩa',
+  autoScroll: 'Cuộn đồng bộ theo đoạn nguồn', wrap: 'Tự xuống dòng hiển thị', editorSettings: 'Biên tập / dịch ngoại tuyến',
+  error: 'Không thể hoàn tất thao tác', copied: 'Đã sao chép', chooseWord: 'Chọn từ trong nguồn hoặc bản nháp để xem nghĩa và nguồn từ điển.',
+} as const;
+export type WorkspaceLabel = keyof typeof vi;
+const en: Record<WorkspaceLabel, string> = {
+  discardDraft: 'The first-meaning draft has edits. Retranslating will discard them. Continue?',
+  discard: 'Discard draft',
+  staleDraft: 'The draft has edits and source or dictionaries changed. Use Re-Translate to confirm before discarding it.',
+  japanesePending: 'Japanese processing is not available yet. Vietnamese is preserved; Chinese processing is never used for Japanese.',
+  translating: 'Looking up dictionaries…', dirty: 'Modified', saved: 'Unmodified', sourceCount: 'source characters',
+  chooseMeaning: 'Choose draft meaning', insert: 'Insert into Vietnamese', insertReading: 'Insert reading into Vietnamese', insertSelection: 'Insert selection into Vietnamese',
+  copy: 'Copy', editOverride: 'Edit / save dictionary override…', saveOverride: 'Save override', overrideTitle: 'Local dictionary override',
+  headword: 'Headword', meanings: 'Meanings (separated by / or |)', reading: 'Reading', kind: 'Dictionary kind',
+  primaryNames: 'Primary names', secondaryNames: 'Secondary names', vietPhrase: 'VietPhrase', hanViet: 'Hán Việt', japanese: 'Japanese dictionary',
+  moveLeft: 'Move token left (Alt+Shift+←)', moveRight: 'Move token right (Alt+Shift+→)', reorderHint: 'Drag tokens to reorder within a paragraph; Alt+Shift+← / Alt+Shift+→ also work.',
+  cancel: 'Cancel', close: 'Close', unknown: 'No Vietnamese gloss available', lemma: 'Lemma', partOfSpeech: 'Part of speech', provenance: 'Dictionary provenance',
+  lookup: 'Looking up additional meanings…', noMeaning: 'No additional meanings found.', dictionary: 'Dictionary', bundled: 'Bundled data', imported: 'Local import', edited: 'Local edit',
+  formatting: 'Vietnamese formatting', bold: 'Bold', italic: 'Italic', underline: 'Underline', textColor: 'Text color', fontSize: 'Font size', alignment: 'Paragraph alignment', alignLeft: 'Left', alignCenter: 'Center', alignRight: 'Right', alignJustify: 'Justify', undo: 'Undo', redo: 'Redo',
+  algorithm: 'Chinese phrase algorithm', longest: 'Longest phrase', leftToRight: 'Left to right', longestConditional: 'Conditional longest phrase',
+  prioritizeNames: 'Prioritize names', fullWrap: 'Full phrase brackets', singleWrap: 'First-meaning brackets', none: 'None', all: 'All', ambiguous: 'Ambiguous',
+  autoScroll: 'Synchronize scroll by source segment', wrap: 'Wrap editor lines', editorSettings: 'Editing / offline translation',
+  error: 'The action could not be completed', copied: 'Copied', chooseWord: 'Select a source or generated token to review meanings and dictionary provenance.',
+};
+export function wt(locale: UiLocale, key: WorkspaceLabel): string { return (locale === 'vi' ? vi : en)[key]; }

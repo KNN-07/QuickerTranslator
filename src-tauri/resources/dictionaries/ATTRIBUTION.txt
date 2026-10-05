@@ -1,0 +1,50 @@
+QuickTranslator offline resources — attribution and redistribution
+
+Chinese/Vietnamese and Japanese/Vietnamese derived datasets
+Files: zh-vi.jsonl, ja-vi.jsonl
+Copyright: Vietnamese Wiktionary contributors. Individual source page links
+(including contributor history) are retained in every entry's sourceUrls.
+Source edition: https://vi.wiktionary.org/
+Raw structured extraction: https://kaikki.org/viwiktionary/rawdata.html
+Wikimedia dump snapshot: 2026-09-01.
+Wiktextract extraction: 2026-10-03.
+Observed archive retrieval date and digest are recorded in manifest.json.
+Extractor: https://github.com/tatuylonen/wiktextract
+License for these derived datasets: Creative Commons Attribution-ShareAlike 4.0
+International, https://creativecommons.org/licenses/by-sa/4.0/
+Full terms: licenses/CC-BY-SA-4.0.txt. These datasets are distributed separately
+from application code. Redistribution/adaptation must retain attribution,
+indicate changes, and use the same or a compatible share-alike license.
+No endorsement by Wikimedia, Wiktionary, Kaikki or the contributors is implied.
+Modifications: selected all ja and zh/cmn entries with Vietnamese glosses; merged
+ordered unique glosses/POS and genuine forms/alt_of/form_of aliases; retained
+source page attribution; omitted entries without glosses and unresolved aliases;
+sorted by headword and serialized the documented six-field JSONL schema.
+Definitions are dictionary lookup assistance, not fluent machine translation.
+
+Hán Việt readings
+File: han-viet.jsonl; source: Unicode Unihan, release 18.0.0.
+https://www.unicode.org/Public/UCD/latest/ucd/Unihan.zip
+https://www.unicode.org/reports/tr38/
+Copyright: Unicode, Inc. License: Unicode License V3.
+Full copyright and permission notice: licenses/Unicode-V3.txt.
+Modifications: extracted every kVietnamese record from all Unihan*.txt files,
+NFC-normalized/lowercased readings only, preserved ordered alternatives,
+selected the first reading, and sorted records.
+Source characters are never normalized, simplified or case-folded.
+
+Japanese tokenizer
+Lindera: https://github.com/lindera/lindera, MIT; licenses/Lindera-MIT.txt.
+IPADIC: https://github.com/lindera/mecab-ipadic, NAIST/ICOT conditions;
+licenses/IPADIC.txt. The embedded IPADIC dictionary ships through Lindera, not
+through these gloss files. Notices accompany the application's offline bundle.
+Notices retain their original terms; IPADIC.txt visibly escapes non-UTF-8 bytes
+in the upstream notice instead of guessing an encoding or replacing them.
+licenses/IPADIC-original.COPYING retains its byte-exact original. Original
+download digests remain recorded in manifest.json.
+
+All resources are provided without warranty under their respective licenses.
+Acquisition URLs, observed SHA-256 digests, byte/entry counts, transformations
+and snapshot metadata are in manifest.json. Raw downloaded inputs are not
+redistributed in the application. User-imported/private dictionaries are not
+part of these datasets or notices.

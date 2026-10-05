@@ -1,0 +1,11 @@
+[
+  {"kind":"primaryNames","headword":"张三","meanings":["Trương Tam"]},
+  {"kind":"secondaryNames","headword":"张三","meanings":["tên phụ"]},
+  {"kind":"vietPhrase","headword":"张三","meanings":["sai"]},
+  {"kind":"vietPhrase","headword":"你好","meanings":["xin chào","chào bạn"]},
+  {"kind":"hanViet","headword":"张","meanings":["trương"],"reading":"trương"},
+  {"kind":"hanViet","headword":"三","meanings":["tam"],"reading":"tam"},
+  {"kind":"hanViet","headword":"你","meanings":["nhĩ","nhị"],"reading":"nhĩ"},
+  {"kind":"hanViet","headword":"好","meanings":["hảo"],"reading":"hảo"},
+  {"kind":"hanViet","headword":"𠀀","meanings":["ha"],"reading":"ha"}
+]

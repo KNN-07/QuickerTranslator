@@ -1,0 +1,6 @@
+Ab=đầu tiên
+ab=không được giữ
+ABCD=dài nhất
+aa=cùng độ dài
+b=ngắn
+broken

@@ -1,0 +1,166 @@
+import type { AppError, PaneId, SourceLanguage, UiLocale } from './types';
+
+const vi = {
+  file: 'File',
+  layout: 'Layout',
+  translateClipboard: 'Translate From Clipboard',
+  retranslate: 'Re-Translate',
+  reloadDictionaries: 'Reload Dicts',
+  config: 'Config',
+  back: 'Back',
+  next: 'Next',
+  aiTranslate: 'AI Translate',
+  sourceLanguage: 'Ngôn ngữ nguồn',
+  chinese: 'Tiếng Trung',
+  japanese: 'Tiếng Nhật',
+  newWindow: 'Tài liệu mới trong cửa sổ khác',
+  open: 'Mở…',
+  save: 'Lưu',
+  saveAs: 'Lưu thành…',
+  export: 'Xuất…',
+  find: 'Tìm / thay thế…',
+  resetLayout: 'Khôi phục bố cục',
+  showPanels: 'Hiển thị các bảng',
+  interfaceLanguage: 'Ngôn ngữ giao diện',
+  vietnamese: 'Tiếng Việt',
+  english: 'English',
+  appearance: 'Giao diện',
+  light: 'Sáng',
+  dark: 'Tối',
+  close: 'Đóng',
+  settingsTitle: 'Cấu hình giao diện',
+  nativeSettingsNotice: 'Tùy chọn giao diện lưu bố cục, ngôn ngữ, màu sắc và cách hiển thị biên tập; không lưu khóa API.',
+  browserNotice: 'Chế độ trình duyệt: thao tác tệp, từ điển, bảng nhớ tạm và AI của ứng dụng gốc không khả dụng. Không có bản dịch mô phỏng.',
+  nativeUnavailable: 'Thao tác này chỉ có trong ứng dụng máy tính.',
+  nativeFailure: 'Không thể hoàn tất thao tác ứng dụng gốc.',
+  nativeConnecting: 'Đang kết nối ứng dụng gốc…',
+  nativeConnected: 'Đã kết nối ứng dụng gốc',
+  nativeDisconnected: 'Ứng dụng gốc chưa sẵn sàng',
+  browserStatus: 'Biên tập cục bộ',
+  dictionaryReady: 'Từ điển đã nạp',
+  dictionaryNotReady: 'Từ điển chưa nạp',
+  tokenizerReady: 'Bộ tách từ Nhật đã nạp',
+  tokenizerNotReady: 'Bộ tách từ Nhật chưa nạp',
+  noSource: 'Chưa có văn bản nguồn',
+  untitled: 'Chưa đặt tên',
+  sourcePaneZh: 'Trung',
+  sourcePaneJa: 'Nhật',
+  readingsPaneZh: 'Hán Việt',
+  readingsPaneJa: 'Cách đọc',
+  phrasesPaneZh: 'VietPhrase',
+  phrasesPaneJa: 'Nghĩa từ',
+  singlePaneZh: 'VietPhrase một nghĩa',
+  singlePaneJa: 'Nghĩa từ một nghĩa',
+  meaningsPane: 'Nghĩa',
+  targetPane: 'Việt',
+  aiPane: 'AI',
+  sourceHint: 'Văn bản nguồn sẽ được biên tập tại đây.',
+  readingsHint: 'Cách đọc ngoại tuyến sẽ hiển thị tại đây.',
+  phrasesHint: 'Các nghĩa từ điển sẽ hiển thị tại đây.',
+  singleHint: 'Bản nháp nghĩa đầu tiên sẽ hiển thị tại đây.',
+  meaningsHint: 'Chọn một từ để xem các nghĩa và nguồn từ điển.',
+  targetHint: 'Bản dịch tiếng Việt do bạn biên tập sẽ hiển thị tại đây.',
+  aiHint: 'Bản dịch AI chỉ xuất hiện sau khi bạn chủ động gửi văn bản đến hồ sơ đã cấu hình.',
+  offlineGlossNotice: 'Hỗ trợ cách đọc và tra nghĩa ngoại tuyến, không phải bản dịch máy hoàn chỉnh.',
+  manualTargetNotice: 'Nội dung tiếng Việt không bị tự động thay thế.',
+  aiPrivacyNotice: 'Không tự gửi văn bản. Bản xem trước AI không thay thế nội dung tiếng Việt.',
+  layoutRestoreError: 'Không thể đọc bố cục đã lưu; đã dùng bố cục mặc định.',
+  preferencesSaveError: 'Không thể lưu tùy chọn giao diện trên thiết bị này.',
+  reopenPane: 'Mở lại bảng từ menu Layout.',
+  workspace: 'Không gian biên dịch',
+} as const;
+
+export type TranslationKey = keyof typeof vi;
+
+const en: Record<TranslationKey, string> = {
+  file: 'File',
+  layout: 'Layout',
+  translateClipboard: 'Translate From Clipboard',
+  retranslate: 'Re-Translate',
+  reloadDictionaries: 'Reload Dicts',
+  config: 'Config',
+  back: 'Back',
+  next: 'Next',
+  aiTranslate: 'AI Translate',
+  sourceLanguage: 'Source language',
+  chinese: 'Chinese',
+  japanese: 'Japanese',
+  newWindow: 'New document in another window',
+  open: 'Open…',
+  save: 'Save',
+  saveAs: 'Save As…',
+  export: 'Export…',
+  find: 'Find / replace…',
+  resetLayout: 'Reset layout',
+  showPanels: 'Show panels',
+  interfaceLanguage: 'Interface language',
+  vietnamese: 'Tiếng Việt',
+  english: 'English',
+  appearance: 'Appearance',
+  light: 'Light',
+  dark: 'Dark',
+  close: 'Close',
+  settingsTitle: 'Interface settings',
+  nativeSettingsNotice: 'Interface preferences store layout, language, appearance and editor display options, never API keys.',
+  browserNotice: 'Browser mode: native file, dictionary, clipboard, and AI actions are unavailable. No simulated translations are provided.',
+  nativeUnavailable: 'This action is available only in the desktop application.',
+  nativeFailure: 'The native application action could not be completed.',
+  nativeConnecting: 'Connecting to native application…',
+  nativeConnected: 'Native application connected',
+  nativeDisconnected: 'Native application is not ready',
+  browserStatus: 'Local editors',
+  dictionaryReady: 'Dictionaries loaded',
+  dictionaryNotReady: 'Dictionaries not loaded',
+  tokenizerReady: 'Japanese tokenizer loaded',
+  tokenizerNotReady: 'Japanese tokenizer not loaded',
+  noSource: 'No source text',
+  untitled: 'Untitled',
+  sourcePaneZh: 'Chinese',
+  sourcePaneJa: 'Japanese',
+  readingsPaneZh: 'Hán Việt',
+  readingsPaneJa: 'Readings',
+  phrasesPaneZh: 'VietPhrase',
+  phrasesPaneJa: 'Word glosses',
+  singlePaneZh: 'VietPhrase — first meaning',
+  singlePaneJa: 'Word glosses — first meaning',
+  meaningsPane: 'Meanings',
+  targetPane: 'Vietnamese',
+  aiPane: 'AI',
+  sourceHint: 'The source editor will appear here.',
+  readingsHint: 'Offline readings will appear here.',
+  phrasesHint: 'Dictionary alternatives will appear here.',
+  singleHint: 'The first-meaning draft will appear here.',
+  meaningsHint: 'Select a word to review meanings and dictionary provenance.',
+  targetHint: 'Your manually edited Vietnamese translation will appear here.',
+  aiHint: 'AI output appears only after you explicitly send text to a configured profile.',
+  offlineGlossNotice: 'Offline readings and dictionary glosses are assistance, not fluent machine translation.',
+  manualTargetNotice: 'Vietnamese text is never replaced automatically.',
+  aiPrivacyNotice: 'No automatic upload. AI preview never replaces Vietnamese text.',
+  layoutRestoreError: 'The saved layout could not be read; the default layout was restored.',
+  preferencesSaveError: 'Interface preferences could not be saved on this device.',
+  reopenPane: 'Reopen a pane from the Layout menu.',
+  workspace: 'Translation workspace',
+};
+
+export const messages: Record<UiLocale, Record<TranslationKey, string>> = { vi, en };
+
+export function translate(locale: UiLocale, key: TranslationKey): string {
+  return messages[locale][key];
+}
+
+export function paneTitle(locale: UiLocale, language: SourceLanguage, pane: PaneId): string {
+  switch (pane) {
+    case 'source': return translate(locale, language === 'zh' ? 'sourcePaneZh' : 'sourcePaneJa');
+    case 'readings': return translate(locale, language === 'zh' ? 'readingsPaneZh' : 'readingsPaneJa');
+    case 'phrases': return translate(locale, language === 'zh' ? 'phrasesPaneZh' : 'phrasesPaneJa');
+    case 'singleMeaning': return translate(locale, language === 'zh' ? 'singlePaneZh' : 'singlePaneJa');
+    case 'meanings': return translate(locale, 'meaningsPane');
+    case 'target': return translate(locale, 'targetPane');
+    case 'ai': return translate(locale, 'aiPane');
+  }
+}
+
+export function localizedError(locale: UiLocale, error: AppError): string {
+  if (error.code === 'native_unavailable') return translate(locale, 'nativeUnavailable');
+  return translate(locale, 'nativeFailure');
+}
