@@ -1,0 +1,8 @@
+[package]
+name = "xattr"
+version = "0.2.3"
+edition = "2024"
+publish = false
+
+[dependencies]
+xattr-current = { package = "xattr", version = "1" }

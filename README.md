@@ -24,6 +24,23 @@
 
 ---
 
+## Native GPUI desktop
+
+Run the Rust desktop application from the repository root. You can pass an existing project or a supported source file at startup.
+
+```sh
+cargo run --locked
+cargo run --locked -- chapter.qtp
+```
+
+The GPUI workspace follows the original tab arrangement. Drag a divider to resize a group, drag a tab to another group, and use **Layout** to reopen a closed pane or restore the default arrangement. **File** opens, saves, recovers and exports documents. **Reload Dicts** opens the dictionary manager. **Config** holds interface and provider preferences. Choose **AI** in the upper-right tab group to review a provider request.
+
+![GPUI workspace translating a sample Chinese document with an imported dictionary](docs/assets/workspace-gpui.png)
+
+Build with a current stable Rust toolchain and a C/C++ compiler. On Ubuntu, the native build needs the Wayland, Fontconfig, ALSA, OpenSSL and XKB development libraries, including `libxkbcommon-x11-dev`. Running the Linux GUI requires a Vulkan-capable driver and an X11 or Wayland display. GPUI links the same Rust engines as the Tauri application and reads the same projects, settings, dictionary database and recovery directory. It saves its tab layout in `gpui-layout.json`.
+
+The instructions and screenshots below describe the original Tauri distribution. The GPUI port has its own Cargo build and CI workflow. Its paragraph-based formatting editor, advanced preferences and dictionary dialogs still differ from the original interface.
+
 ## The workspace
 
 Keep the source, readings, dictionary meanings, phrase draft, and your Vietnamese text together in a compact, resizable desktop layout. Vietnamese is the output language; the interface supports Vietnamese and English, with light and dark themes.

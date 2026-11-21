@@ -1,0 +1,12 @@
+[workspace]
+members = ["desktop"]
+exclude = ["src-tauri"]
+resolver = "3"
+
+[profile.dev]
+debug = 0
+
+# GPUI's zed-async-tar 0.5 uses xattr 0.2, which requires the removed Linux
+# libc::ENOATTR alias. Forward its sole call to the maintained implementation.
+[patch.crates-io]
+xattr = { path = "desktop/compat/xattr" }

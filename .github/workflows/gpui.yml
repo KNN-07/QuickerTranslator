@@ -1,0 +1,36 @@
+name: GPUI desktop
+on: [push, pull_request, workflow_dispatch]
+permissions:
+  contents: read
+jobs:
+  native:
+    strategy:
+      fail-fast: false
+      matrix:
+        runner: [ubuntu-24.04, macos-15, macos-15-intel, windows-latest]
+    runs-on: ${{ matrix.runner }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+      - name: Install Linux development libraries
+        if: runner.os == 'Linux'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y clang cmake pkg-config libasound2-dev libfontconfig1-dev libwayland-dev libxkbcommon-x11-dev libx11-xcb-dev libssl-dev
+      - run: rustup update stable --no-self-update
+      - run: cargo +stable test --locked -p quicktranslator-gpui
+      - run: cargo +stable build --release --locked -p quicktranslator-gpui
+      - name: Stage executable and dictionary notices
+        shell: bash
+        run: |
+          mkdir -p gpui-dist
+          extension=""
+          if [[ "$RUNNER_OS" == Windows ]]; then extension=".exe"; fi
+          cp "target/release/quicktranslator-gpui$extension" gpui-dist/
+          cp src-tauri/resources/dictionaries/ATTRIBUTION.txt gpui-dist/
+          cp -R src-tauri/resources/dictionaries/licenses gpui-dist/
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        with:
+          name: QuickTranslator-GPUI-${{ matrix.runner }}
+          path: gpui-dist/

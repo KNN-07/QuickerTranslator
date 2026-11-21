@@ -143,6 +143,14 @@ fn render_html_column(request: &ExportRequest, column: &ExportColumn, output: &m
     }
 }
 
+/// Render the validated target tree for native rich-text preview.
+pub fn target_html(document: &Value) -> AppResult<String> {
+    super::schema::validate_target(document)?;
+    let mut html = String::new();
+    render_html_node(document, &mut html);
+    Ok(html)
+}
+
 fn render_html_node(node: &Value, output: &mut String) {
     let tag = match kind(node) {
         "doc" => { for child in children(node) { render_html_node(child, output); } return; }
